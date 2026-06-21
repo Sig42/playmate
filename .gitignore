@@ -1,1 +1,13 @@
 .idea/
+
+*.log
+*.pot
+*.pyc
+__pycache__/
+media/
+staticfiles/
+
+.env
+.env.local
+.env.*.local
+*.env

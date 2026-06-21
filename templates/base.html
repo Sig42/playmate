@@ -1,0 +1,120 @@
+{% load django_bootstrap5 %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home page</title>
+    {% bootstrap_css %}
+<!--  Replace it with bootstrap files !!!!!!!!!!!!!!!!!!!!!!!!!!!!! -->
+</head>
+<body>
+    {% include "navigation.html" %}
+    {% block content %}
+    <div class="container-sm mt-5">
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <h3>
+                Что это и зачем?
+                </h3>
+                <p>
+                    Однажды я прочитал правила к игре "Сэкигахара". И не мог в нее толком поиграть почти год,
+                    потому что было не с кем. Не смог найти желающих.
+                    Тогда я подумал, что было бы неплохо,
+                    если бы было такое место, где ты просто пишешь название игры и получаешь список людей,
+                    которые тоже хотят в нее сыграть. Здесь нет магии или ИИ-бота, который ищет людей на просторах
+                    интернета. Здесь Вы можете найти только тех людей, которые зарегистрировались на этом сайте.
+                    Все просто.
+                    Так что зовите сюда всех знакомых, чем нас больше - тем больше шансов создать свою
+                    команду мечты для настолок!
+                </p>
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Игроки</h5>
+                        <p class="card-text">
+                            Этот раздел нужен непосредственно для поиска своих друзей по играм. Вводите название игры -
+                            получаете список людей, которые хотят в нее сыграть.</p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Игротеки</h5>
+                        <p class="card-text">
+                            Здесь Вы можете разместить свой анонс о предстоящей игре или посмотреть где, когда и во что
+                            собираются играть другие, чтобы к ним присоединиться.
+                        </p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Разработчики</h5>
+                        <p class="card-text">
+                            Насколько я знаю разработчикам настолок всегда нужны тестеры - люди, которые будут играть
+                            в прототипы игр и давать обратную связь. Для них этот раздел, вдруг поможет. Здесь
+                            разработчики могут размещать приглашение на тесты с кратким описанием игры. Игроки же могут
+                            выбрать в чем бы они хотели поучаствовать.
+                        </p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Турниры</h5>
+                        <p class="card-text">
+                            Здесь можно размещать/посмотреть анонсы турниров.
+                        </p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Барахолка</h5>
+                        <p class="card-text">
+                            Здесь покупаем/продаем настолки.
+                        </p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Инфо</h5>
+                        <p class="card-text">
+                            Здесь чуть больше слов про сайт.
+                        </p>
+                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endblock %}
+    {% bootstrap_javascript %}
+</body>
+</html>

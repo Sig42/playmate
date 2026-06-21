@@ -1,0 +1,44 @@
+{% load active_page %}
+
+<nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item" lang="en">
+          <a class="nav-link {% active_url request 'home_page' %} navbar-brand" href="#">Playmate</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Игроки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Игротеки</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Разработчики</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Турниры</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Барахолка</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Инфо</a>
+        </li>
+      </ul>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+              <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Имя</a>
+          </li>
+          <div class="nav-link">|</div>
+          <li class="nav-item">
+              <a class="nav-link" href="#">Выход</a>
+          </li>
+      </ul>
+    </div>
+  </div>
+</nav>
