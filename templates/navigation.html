@@ -9,7 +9,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item" lang="en">
-          <a class="nav-link {% active_url request 'home_page' %} navbar-brand" href="#">Playmate</a>
+          <a class="nav-link {% active_url request 'home_page' %} navbar-brand" href="/">Playmate</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Игроки</a>
@@ -31,13 +31,28 @@
         </li>
       </ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
-          <li class="nav-item">
-              <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Имя</a>
-          </li>
-          <div class="nav-link">|</div>
-          <li class="nav-item">
-              <a class="nav-link" href="#">Выход</a>
-          </li>
+          {% if user.is_authenticated %}
+              <li class="nav-item">
+                  <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">
+                      {{ user.username }}
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <form action="{% url 'logout' %}" method="post">
+                      {% csrf_token %}
+                      <a class="nav-link" href="#" onclick="parentNode.submit()">Выход</a>
+                  </form>
+              </li>
+          {% else %}
+              <li class="nav-item">
+                  <a class="nav-link {% active_url request 'signup' %}" href="{% url 'signup' %}">
+                      Регистрация
+                  </a>
+              </li>
+              <li class="nav-item">
+                  <a class="nav-link" href="accounts/login/">Войти</a>
+              </li>
+          {% endif %}
       </ul>
     </div>
   </div>

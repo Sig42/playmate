@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %} Sign Up {% endblock %}
+{% block content %}
+    <div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <h2> Регистрация </h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {% for field in form %}
+                        <div class="form-label mt-3">{{ field.label_tag }}</div>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <p style="color: red;">{{ error }}</p>
+                        {% endfor %}
+                    {% endfor %}
+                    <input type="submit" value="Отправить" class="btn btn-primary">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}

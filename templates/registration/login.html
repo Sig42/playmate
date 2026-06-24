@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+    Login
+{% endblock %}
 
-</body>
-</html>
+{% block content %}
+    <div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <h2>
+                    Вход
+                </h2>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <input class="btn btn-primary" type="submit" value="Войти">
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
