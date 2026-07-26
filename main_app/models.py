@@ -3,14 +3,10 @@ from django.contrib.auth.models import User
 
 
 class BoardGame(models.Model):
-    title_russian = models.CharField(verbose_name='Название игры на русском',
-                                     blank=True,
-                                     null=True,
-                                     max_length=100)
-    title_origin = models.CharField(verbose_name='Название игры на языке оригинала',
-                                    blank=True,
-                                    null=True,
-                                    max_length=100)
+    title = models.CharField(verbose_name='Название игры',
+                             blank=False,
+                             null=False,
+                             max_length=100)
     url_tesera = models.URLField(verbose_name='Ссылка на игру на сайте tesera.ru',
                                  blank=True,
                                  null=True,
@@ -19,20 +15,23 @@ class BoardGame(models.Model):
                               blank=True,
                               null=True,
                               max_length=100)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User,
                                    related_name='created_games',
                                    on_delete=models.SET_NULL,
                                    null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    updated_at = models.DateTimeField(auto_now=True)
     players= models.ManyToManyField(User,
-                                    null=True,
-                                    related_name='liked_games')
+                                    related_name='liked_games',
+                                    null=True)
+
+    def __str__(self):
+        return self.title
+
 
     class Meta:
         indexes = [
-            models.Index(fields=['title_russian']),
-            models.Index(fields=['title_origin'])
+            models.Index(fields=['title'])
         ]
         verbose_name = 'Настолка'
         verbose_name_plural = 'Настолки'
@@ -43,7 +42,8 @@ class Announcement(models.Model):
                             help_text='Если игра будет онлайн укажите площадку, например: Tabletop',
                             max_length=100,
                             blank = True,
-                            null = True)
+                            null = True,
+                            db_index=True)
     address = models.CharField(verbose_name='Адрес мероприятия',
                                help_text='Пропустите это поле, если игра будет онлайн',
                                max_length=200,
@@ -88,6 +88,14 @@ class GameAnnouncement(Announcement):
                                    related_name='game_ann',
                                    null=False)
 
+    def __str__(self):
+        return f'GameAnnouncement pk-{self.pk}'
+
+    class Meta:
+        verbose_name = "Анонс игры"
+        verbose_name_plural = "Анонсы игр"
+        ordering = ['-date']
+
 
 class TestAnnouncement(Announcement):
     title = models.CharField(verbose_name='Название будущей игры',
@@ -102,6 +110,14 @@ class TestAnnouncement(Announcement):
                                    null=False,
                                    related_name='test_ann')
     conditions = models.TextField(verbose_name='Прочая информация о мероприятии')
+
+    def __str__(self):
+        return f'TestAnnouncement pk-{self.pk}'
+
+    class Meta:
+        verbose_name = "Анонс тестирования игр"
+        verbose_name_plural = "Анонсы тестирования игр"
+        ordering = ['-date']
 
 
 class TournamentAnnouncement(Announcement):
@@ -119,6 +135,14 @@ class TournamentAnnouncement(Announcement):
                                    on_delete=models.CASCADE,
                                    null=False,
                                    related_name='tour_ann')
+
+    def __str__(self):
+        return f'TournamentAnnouncement pk-{self.pk}'
+
+    class Meta:
+        verbose_name = "Анонс турнира"
+        verbose_name_plural = "Анонсы турниров"
+        ordering = ['-date']
 
 
 class SaleAnnouncement(models.Model):
@@ -151,3 +175,11 @@ class SaleAnnouncement(models.Model):
                                    on_delete=models.CASCADE,
                                    null=False,
                                    related_name='sale_ann')
+
+    def __str__(self):
+        return f'SaleAnnouncement pk-{self.pk}'
+
+    class Meta:
+        verbose_name = "Объявление о продаже"
+        verbose_name_plural = "Объявления о продаже"
+        ordering = ['-created_at']

@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block content %}
+<div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <h2 class="mb-4"> Если Вы не нашли нужную игру - добавьте ее в список. </h2>
+                <a href="#" class="btn btn-primary">Добавить игру</a>
+                <hr>
+                {% for game in board_games %}
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ game.title }}</h5>
+                            <div class="card-text">
+                                <p><a class="link-primary" href="{{ game.url_tesera }}">Ссылка на игру на tesera.ru</a></p>
+                                <p><a class="link-primary" href="{{ game.url_bgg }}">Ссылка на игру на boardgamegeek.com</a></p>
+                            </div>
+                            <a href="add_game_to_player!!!" class="btn btn-primary">Хочу сыграть</a>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>There are no games</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
