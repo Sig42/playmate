@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Игра добавлена
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+        <div class="row pb-5 justify-content-center">
+            <div class="col col-lg-10 text-center">
+                <h2>
+                    Спасибо за Ваш вклад в развитие сообщества!
+                </h2>
+                <p>
+                    Игра была успешно добавлена.
+                </p>
+            </div>
+        </div>
+    </div>
+{% endblock %}

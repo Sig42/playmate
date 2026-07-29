@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Турниры
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <h2 class="mb-4">Здесь Вы можете посмотреть/разместить объявления о проводимых турнирах.</h2>
+                <a href="#" class="btn btn-primary">Добавить объявление</a>
+                <hr>
+                {% for ann in tournament_announcements %}
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            {# !!!!!!!!!!!!!!!!! Need sql join request to boardgame model !!!!!!!!!!!!!!!!!!!!! #}
+                            <h5 class="card-title">{{ ann.boardgame.title }}</h5>
+                            <div class="card-text">
+                                <p>Город: {{ ann.city }}</p>
+                                <p>Адрес: {{ ann.address }}</p>
+                                <p>Онлайн: {{ ann.is_online }}</p>
+                                <p>Контакты: {{ ann.contact }}</p>
+                                <p>Дата, время: {{ ann.date }}</p>
+                                <p>Условия: {{ ann.conditions }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Пока объявлений нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

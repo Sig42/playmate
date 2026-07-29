@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Барахолка
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <h2 class="mb-4">Здесь Вы можете посмотреть/разместить объявления о продаже настолок.</h2>
+                <a href="#" class="btn btn-primary">Добавить объявление</a>
+                <hr>
+                {% for ann in sale_announcements %}
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ann.boardgame.title }}</h5>
+                            <div class="card-text">
+                                <p>Цена: {{ ann.price }}</p>
+                                <p>Описание: {{ ann.description }}</p>
+                                <p>Город: {{ ann.city }}</p>
+                                <p>Контакты: {{ ann.contact }}</p>
+                                <p>Объявление создано: {{ ann.created_at }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Пока объявлений нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

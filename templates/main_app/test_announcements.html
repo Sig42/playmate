@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Объявления о тестах
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <h2 class="mb-4">Здесь Вы можете посмотреть/разместить объявления от разработчиков настольных игр
+                    о проведении тестов для проектов настолок.</h2>
+                <a href="#" class="btn btn-primary">Добавить объявление</a>
+                <hr>
+                {% for ann in test_announcements %}
+                    <div class="card mt-2">
+                        <div class="card-body">
+                            <h5 class="card-title">{{ ann.title }}</h5>
+                            <div class="card-text">
+                                <p>Город: {{ ann.city }}</p>
+                                <p>Адрес: {{ ann.address }}</p>
+                                <p>Место: {{ ann.place }}</p>
+                                <p>Дата, время проведения: {{ ann.date }}</p>
+                                <p>Краткое описание игры: {{ ann.description }}</p>
+                                <p>Онлайн: {{ ann.is_online }}</p>
+                                <p>Контакты: {{ ann.contact }}</p>
+                                <p>Дополнительная информация: {{ ann.conditions }}</p>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Пока объявлений нет.</p>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
