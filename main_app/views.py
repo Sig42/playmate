@@ -1,7 +1,21 @@
 # from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
 from django.shortcuts import render
-from django.views.generic import ListView
+from django.views.generic import ListView, DetailView, CreateView
 from .models import BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement
+from .forms import BoardGameForm
+
+# Проверить все вьюхи и шаблоны на наличие запросов N+1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+class PlayersView(ListView):
+    model = get_user_model()
+    template_name = 'main_app/players.html'
+    context_object_name = 'players'
+
+    def get_queryset(self):
+        user = get_user_model()
+        queryset = user.objects.prefetch_related('liked_games').all()
+        return queryset
 
 
 class BoardGamesView(ListView):
@@ -15,6 +29,36 @@ class BoardGamesView(ListView):
         if title:
             queryset = queryset.filter(title__icontains=title.lower())
         return queryset
+
+
+class BoardGameView(DetailView):
+    model = BoardGame
+    template_name = 'main_app/board_game.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        game = BoardGame.objects.get(pk=self.object.pk)
+        context['game'] = game
+        context['players'] = game.players.all()
+        return context
+
+
+class CreateGameView(CreateView):
+    model = BoardGame
+    form_class = BoardGameForm
+    template_name = 'main_app/create_game.html'
+
+
+
+class PlayerView(DetailView):
+    model = get_user_model()
+    template_name = 'main_app/player.html'
+    context_object_name = 'player'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['games'] = self.object.liked_games.all()
+        return context
 
 
 class GameAnnouncementsView(ListView):
@@ -50,17 +94,3 @@ def add_liked_game(request, pk):
     user = request.user
     user.liked_games.add(pk)
     return render(request, 'main_app/liked_game_added.html')
-
-
-
-# @login_required
-# def create_game(request):
-#     if request.method == 'POST':
-#         form = GameForm(request.POST)
-#         if form.is_valid():
-#             game = form.save(user=request.user)  # Передаем пользователя
-#             return redirect('game_detail', pk=game.pk)
-#     else:
-#         form = GameForm()
-#     return render(request, 'create_game.html', {'form': form})
-

@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    {{ game.title|capfirst }}
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+        <div class="row justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ game.title|capfirst }}</h5>
+                        <div class="card-text">
+                            {% if game.url_tesera %}
+                            <p><a class="link-primary"
+                                  href="{{ game.url_tesera }}">Ссылка на игру на tesera.ru</a></p>
+                            {% endif %}
+                            {% if game.url_bgg %}
+                            <p><a class="link-primary"
+                                  href="{{ game.url_bgg }}">Ссылка на игру на boardgamegeek.com</a></p>
+                            {% endif %}
+                            <h5 class="mt-4">Желающие сыграть:</h5>
+                            {% for player in players %}
+                                <p><a class="link-primary"
+                                      href="{% url 'main:player' player.pk %}">{{ player.username }}</a></p>
+                            {% empty %}
+                                Желающих в нее сыграть пока нет. Увы.
+                            {% endfor %}
+                            <a href="{% url 'main:add_liked_game' game.pk %}"
+                               class="btn btn-primary mt-4">Хочу сыграть</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

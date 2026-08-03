@@ -9,7 +9,15 @@ class BoardGameForm(forms.ModelForm):
                   'url_tesera',
                   'url_bgg']
 
-    def save(self, commit=True, user=None):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields:
+            self.fields[field].widget.attrs.update({
+                'class': 'form-control',
+                'autocomplete': 'off'
+            })
+
+    def save(self, user=None, commit=True):
         instance = super().save(commit=False)
         if user and user.is_authenticated:
             instance.created_by = user

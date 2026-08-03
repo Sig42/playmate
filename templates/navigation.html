@@ -19,9 +19,6 @@
              href="{% url 'main:games' %}">Игры</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Игроки</a>
-        </li>
-        <li class="nav-item">
           <a class="nav-link {% active_url request 'main:game_anns' %}" href="{% url 'main:game_anns' %}">Игротеки</a>
         </li>
         <li class="nav-item">
@@ -32,7 +29,7 @@
              href="{% url 'main:tournament_anns' %}">Турниры</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Барахолка</a>
+          <a class="nav-link {% active_url request 'main:sale_anns' %}" href="{% url 'main:sale_anns' %}">Барахолка</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Инфо</a>

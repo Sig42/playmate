@@ -39,21 +39,10 @@
                     <div class="card-body">
                         <h5 class="card-title">Игры</h5>
                         <p class="card-text">
-                            Возможно игра, в которую Вы хотите сыграть, не находится в списке. Здесь Вы сможете ее добавить. </p>
-                        <a href="{% url 'main:games' %}" class="btn btn-primary">Go somewhere</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="row mb-5 justify-content-center">
-            <div class="col col-lg-10">
-                <div class="card">
-                    <div class="card-body">
-                        <h5 class="card-title">Игроки</h5>
-                        <p class="card-text">
-                            Этот раздел нужен непосредственно для поиска своих друзей по играм. Вводите название игры -
-                            получаете список людей, которые хотят в нее сыграть.</p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                            Здесь по названию игры можно найти людей, которые хотят в нее сыграть, или добавить игру в
+                            свой список.
+                        </p>
+                        <a href="{% url 'main:games' %}" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>
@@ -67,7 +56,7 @@
                             Здесь Вы можете разместить свой анонс о предстоящей игре или посмотреть где, когда и во что
                             собираются играть другие, чтобы к ним присоединиться.
                         </p>
-                        <a href="{% url 'main:game_anns' %}" class="btn btn-primary">Go somewhere</a>
+                        <a href="{% url 'main:game_anns' %}" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>
@@ -83,7 +72,7 @@
                             разработчики могут размещать приглашение на тесты с кратким описанием игры. Игроки же могут
                             выбрать в чем бы они хотели поучаствовать.
                         </p>
-                        <a href="{% url 'main:test_anns' %}" class="btn btn-primary">Go somewhere</a>
+                        <a href="{% url 'main:test_anns' %}" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>
@@ -96,7 +85,7 @@
                         <p class="card-text">
                             Здесь можно размещать/посмотреть анонсы турниров.
                         </p>
-                        <a href="{% url 'main:tournament_anns' %}" class="btn btn-primary">Go somewhere</a>
+                        <a href="{% url 'main:tournament_anns' %}" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>
@@ -109,7 +98,7 @@
                         <p class="card-text">
                             Здесь покупаем/продаем настолки.
                         </p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a href="{% url 'main:sale_anns' %}" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>
