@@ -28,7 +28,7 @@
                                 <p><a class="link-primary"
                                       href="{% url 'main:player' player.pk %}">{{ player.username }}</a></p>
                             {% empty %}
-                                Желающих в нее сыграть пока нет. Увы.
+                                <p>Желающих в нее сыграть пока нет. Увы.</p>
                             {% endfor %}
                             <a href="{% url 'main:add_liked_game' game.pk %}"
                                class="btn btn-primary mt-4">Хочу сыграть</a>

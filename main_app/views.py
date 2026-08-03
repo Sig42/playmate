@@ -1,4 +1,4 @@
-# from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from django.views.generic import ListView, DetailView, CreateView
@@ -43,11 +43,14 @@ class BoardGameView(DetailView):
         return context
 
 
-class CreateGameView(CreateView):
+class CreateGameView(LoginRequiredMixin, CreateView):
     model = BoardGame
     form_class = BoardGameForm
-    template_name = 'main_app/create_game.html'
+    template_name = 'main_app/board_game_create.html'
 
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
 
 
 class PlayerView(DetailView):
