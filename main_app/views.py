@@ -1,7 +1,8 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
-from django.views.generic import ListView, DetailView, CreateView
+from django.urls import reverse_lazy
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from .models import BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement
 from .forms import BoardGameForm
 
@@ -47,10 +48,18 @@ class CreateGameView(LoginRequiredMixin, CreateView):
     model = BoardGame
     form_class = BoardGameForm
     template_name = 'main_app/board_game_create.html'
+    login_url = 'accounts/signup'
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
+
+
+class DeleteGameView(LoginRequiredMixin, DeleteView):
+    model = BoardGame
+    template_name = 'main_app/board_game_delete.html'
+    login_url = 'accounts:signup'
+    success_url = reverse_lazy('main:games')
 
 
 class PlayerView(DetailView):
