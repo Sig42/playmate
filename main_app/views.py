@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from .models import BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement
-from .forms import BoardGameForm
+from .forms import BoardGameForm, GameAnnouncementForm
 
 # Проверить все вьюхи и шаблоны на наличие запросов N+1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -77,6 +77,31 @@ class GameAnnouncementsView(ListView):
     model = GameAnnouncement
     template_name = 'main_app/game_announcements.html'
     context_object_name = 'game_announcements'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = GameAnnouncementForm()
+        return context
+
+    def get_queryset(self):
+        queryset = GameAnnouncement.objects.select_related('boardgame').all()
+        game = self.request.GET.get('game')
+        city = self.request.GET.get('city')
+        place = self.request.GET.get('place')
+        date = self.request.GET.get('date')
+        is_online = self.request.GET.get('is_online')
+
+        if game:
+            queryset = queryset.filter(boardgame__title__icontains=game.lower())
+        if city:
+            queryset = queryset.filter(city__icontains=city.lower())
+        if place:
+            queryset = queryset.filter(place__icontains=place.lower())
+        if date:
+            queryset = queryset.filter(date__date=date)
+        if is_online:
+            queryset = queryset.filter(is_online=True)
+        return queryset
 
 
 class TestAnnouncementsView(ListView):
