@@ -13,7 +13,7 @@
             <div class="col col-lg-10">
                 <h2 class="mb-4">Здесь Вы можете посмотреть объявления о проводимых
                     играх или добавить свое объявление.</h2>
-                <a href="#" class="btn btn-primary">Добавить объявление</a>
+                <a href="{% url 'main:create_game_ann' %}" class="btn btn-primary">Добавить объявление</a>
                 <hr>
             </div>
         </div>
@@ -29,15 +29,19 @@
                 {% for ann in game_announcements %}
                     <div class="card mt-2">
                         <div class="card-body">
-                            <h5 class="card-title">{{ ann.boardgame.title }}</h5>
+                            <h5 class="card-title">{{ ann.boardgame.title|capfirst }}</h5>
                             <div class="card-text">
-                                <p>Город: {{ ann.city }}</p>
+                                <p>Город: {{ ann.city|capfirst }}</p>
                                 <p>Адрес: {{ ann.address }}</p>
                                 <p>Место: {{ ann.place }}</p>
                                 <p>Дата, время проведения: {{ ann.date }}</p>
                                 <p>Онлайн: {{ ann.is_online }}</p>
                                 <p>Контакты: {{ ann.contact }}</p>
                                 <p>Описание: {{ ann.conditions }}</p>
+                                {% if request.user == ann.created_by %}
+                                <a class="btn btn-primary"
+                                   href="{% url 'main:delete_game_ann' ann.pk %}">Удалить сообщение</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>

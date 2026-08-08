@@ -15,6 +15,20 @@
                     о проведении тестов для проектов настолок.</h2>
                 <a href="#" class="btn btn-primary">Добавить объявление</a>
                 <hr>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-3">
+                <h2 class="mb-4">Фильтровать объявления:</h2>
+
+                {# --> I don't have form for filters <-- #}
+
+                <form method="get" class="form">
+                    {% bootstrap_form form %}
+                    {% bootstrap_button button_type='submit' content='OK' %}
+                </form>
+            </div>
+            <div class="col-lg-9">
                 {% for ann in test_announcements %}
                     <div class="card mt-2">
                         <div class="card-body">
@@ -28,6 +42,13 @@
                                 <p>Онлайн: {{ ann.is_online }}</p>
                                 <p>Контакты: {{ ann.contact }}</p>
                                 <p>Дополнительная информация: {{ ann.conditions }}</p>
+                                {% if request.user == ann.created_by %}
+                                <a class="btn btn-primary"
+                                   href="!!!!!!!!!!!">Удалить сообщение</a>
+
+                                {# --> Need a link to delete view <--  #}
+
+                                {% endif %}
                             </div>
                         </div>
                     </div>

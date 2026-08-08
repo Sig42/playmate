@@ -13,6 +13,10 @@
 </head>
 <body>
     {% include "navigation.html" %}
+
+    {% block admin_announcement %}
+    {% endblock %}
+
     {% block content %}
     <div class="container-sm mt-5">
         <div class="row mb-5 justify-content-center">

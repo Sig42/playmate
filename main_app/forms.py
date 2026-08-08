@@ -1,5 +1,3 @@
-from tabnanny import verbose
-
 from django import forms
 from .models import BoardGame, GameAnnouncement
 
@@ -30,7 +28,48 @@ class BoardGameForm(forms.ModelForm):
         return data
 
 
-class GameAnnouncementForm(forms.Form):
+class GameAnnouncementFilterForm(forms.Form):
+    game = forms.CharField(label='Название игры',
+                           help_text='Попробуйте и на русском и на языке оригинала. '
+                                     'Можно ввести только часть названия игры.',
+                           max_length=100,
+                           strip=True,
+                           required=False)
+    city = forms.CharField(label='Город',
+                           help_text='Можно ввести только часть названия города.',
+                           max_length=100,
+                           strip=True,
+                           required=False)
+    place = forms.CharField(label='Место',
+                           help_text='Название заведения, в котором проходит игра',
+                           max_length=100,
+                           strip=True,
+                           required=False)
+    date = forms.DateField(label='Дата проведения',
+                           required=False,
+                           widget=forms.DateInput(attrs={'type': 'date'}))
+    is_online = forms.BooleanField(label='Искать онлайн игры',
+                                   required=False)
+
+
+#       --> WITHOUT USING <--
+class GameAnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = GameAnnouncement
+        fields = ['boardgame',
+                  'city',
+                  'address',
+                  'place',
+                  'date',
+                  'is_online',
+                  'contact',
+                  'conditions']
+        widgets = {
+            'date': forms.DateInput(attrs={'type': 'date'})
+        }
+
+
+class GameAnnouncementFilterForm(forms.Form):
     game = forms.CharField(label='Название игры',
                            help_text='Попробуйте и на русском и на языке оригинала. '
                                      'Можно ввести только часть названия игры.',

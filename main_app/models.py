@@ -36,6 +36,7 @@ class BoardGame(models.Model):
         indexes = [
             models.Index(fields=['title'])
         ]
+        ordering = ['title']
         verbose_name = 'Настолка'
         verbose_name_plural = 'Настолки'
 
@@ -61,7 +62,7 @@ class Announcement(models.Model):
                                blank=True,
                                null=True)
     date = models.DateTimeField(verbose_name='Дата и время проведения мероприятия',
-                                help_text='Сообщение автоматически удалится через неделю с указанной даты',
+                                help_text='Формат ГГГГ-ММ-ДД ЧЧ:ММ',
                                 blank=False,
                                 null=False)
     created_at = models.DateTimeField(auto_now_add=True)
