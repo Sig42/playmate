@@ -9,53 +9,51 @@
 
 {% block content %}
 <div class="container-sm mt-5">
-        <div class="row justify-content-center">
-            <div class="col col-lg-10">
-                <h2 class="mb-4">Здесь Вы можете посмотреть/разместить объявления от разработчиков настольных игр
-                    о проведении тестов для проектов настолок.</h2>
-                <a href="#" class="btn btn-primary">Добавить объявление</a>
-                <hr>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-3">
-                <h2 class="mb-4">Фильтровать объявления:</h2>
-
-                {# --> I don't have form for filters <-- #}
-
-                <form method="get" class="form">
-                    {% bootstrap_form form %}
-                    {% bootstrap_button button_type='submit' content='OK' %}
-                </form>
-            </div>
-            <div class="col-lg-9">
-                {% for ann in test_announcements %}
-                    <div class="card mt-2">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ ann.title }}</h5>
-                            <div class="card-text">
-                                <p>Город: {{ ann.city }}</p>
-                                <p>Адрес: {{ ann.address }}</p>
-                                <p>Место: {{ ann.place }}</p>
-                                <p>Дата, время проведения: {{ ann.date }}</p>
-                                <p>Краткое описание игры: {{ ann.description }}</p>
-                                <p>Онлайн: {{ ann.is_online }}</p>
-                                <p>Контакты: {{ ann.contact }}</p>
-                                <p>Дополнительная информация: {{ ann.conditions }}</p>
-                                {% if request.user == ann.created_by %}
-                                <a class="btn btn-primary"
-                                   href="!!!!!!!!!!!">Удалить сообщение</a>
-
-                                {# --> Need a link to delete view <--  #}
-
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <p>Пока объявлений нет.</p>
-                {% endfor %}
-            </div>
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            <h2 class="mb-4">Здесь Вы можете посмотреть/разместить объявления от разработчиков настольных игр
+                о проведении тестов для проектов настолок.</h2>
+            <a href="{% url 'main:create_test_ann' %}" class="btn btn-primary">Добавить объявление</a>
+            <hr>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-3">
+            <h2 class="mb-4">Фильтровать объявления:</h2>
+            <form method="get" class="form">
+                {% bootstrap_form form %}
+                {% bootstrap_button button_type='submit' content='OK' %}
+            </form>
+        </div>
+        <div class="col-lg-9">
+            {% for ann in test_announcements %}
+                <div class="card mt-2">
+                    <div class="card-body">
+                        {% if ann.title %}
+                            <h5 class="card-title">{{ ann.title|capfirst }}</h5>
+                        {% else %}
+                            <h5 class="card-title">Без названия</h5>
+                        {% endif %}
+                        <div class="card-text">
+                            <p>Город: {{ ann.city }}</p>
+                            <p>Адрес: {{ ann.address }}</p>
+                            <p>Место: {{ ann.place }}</p>
+                            <p>Дата, время проведения: {{ ann.date }}</p>
+                            <p>Краткое описание игры: {{ ann.description }}</p>
+                            <p>Онлайн: {{ ann.is_online }}</p>
+                            <p>Контакты: {{ ann.contact }}</p>
+                            <p>Дополнительная информация: {{ ann.conditions }}</p>
+                            {% if request.user == ann.created_by %}
+                            <a class="btn btn-primary"
+                               href="{% url 'main:delete_test_ann' ann.pk %}">Удалить объявление</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Пока объявлений нет.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}

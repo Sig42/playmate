@@ -2,11 +2,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views.generic import ListView, DetailView, CreateView, DeleteView, UpdateView
+from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.contrib.messages.views import SuccessMessageMixin
 
 from .models import BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement
-from .forms import BoardGameForm, GameAnnouncementForm, GameAnnouncementFilterForm
+from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncementsFilterForm,
+                    TournamentAnnouncementFilterForm, TournamentAnnouncementForm, SaleAnnouncementFilterForm,
+                    SaleAnnouncementForm)
 
 
 # Проверить все вьюхи и шаблоны на наличие запросов N+1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -51,7 +53,7 @@ class BoardGameView(DetailView):
 class CreateGameView(LoginRequiredMixin, CreateView):
     form_class = BoardGameForm
     template_name = 'main_app/board_game_create.html'
-    login_url = 'accounts/signup'
+    login_url = reverse_lazy('accounts/signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -61,7 +63,7 @@ class CreateGameView(LoginRequiredMixin, CreateView):
 class DeleteGameView(LoginRequiredMixin, DeleteView):
     model = BoardGame
     template_name = 'main_app/board_game_delete.html'
-    login_url = 'accounts:signup'
+    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:games')
 
 
@@ -83,11 +85,11 @@ class GameAnnouncementsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = GameAnnouncementFilterForm()
+        context['form'] = GameAnnouncementsFilterForm()
         return context
 
     def get_queryset(self):
-        queryset = GameAnnouncement.objects.select_related('boardgame').all()
+        queryset = GameAnnouncement.objects.select_related('boardgame', 'created_by').all()
         game = self.request.GET.get('game')
         city = self.request.GET.get('city')
         place = self.request.GET.get('place')
@@ -119,7 +121,7 @@ class CreateGameAnnouncementView(LoginRequiredMixin, CreateView):
               'conditions']
     template_name = 'main_app/game_announcement_create.html'
     success_url = reverse_lazy('main:game_anns')
-    login_url = 'accounts/signup'
+    login_url = reverse_lazy('accounts/signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -129,7 +131,7 @@ class CreateGameAnnouncementView(LoginRequiredMixin, CreateView):
 class DeleteGameAnnouncement(LoginRequiredMixin, DeleteView):
     model = GameAnnouncement
     template_name = 'main_app/game_announcement_delete.html'
-    login_url = 'accounts:signup'
+    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:game_anns')
 
 
@@ -140,23 +142,22 @@ class TestAnnouncementsView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = GameAnnouncementFilterForm()
+        context['form'] = TestAnnouncementsFilterForm()
         return context
 
     def get_queryset(self):
-        queryset = GameAnnouncement.objects.select_related('boardgame').all()
-        game = self.request.GET.get('game')
+        queryset = TestAnnouncement.objects.select_related('created_by').all()
+        title = self.request.GET.get('title')
         city = self.request.GET.get('city')
-        place = self.request.GET.get('place')
         date = self.request.GET.get('date')
         is_online = self.request.GET.get('is_online')
 
-        if game:
-            queryset = queryset.filter(boardgame__title__icontains=game.lower())
+        if title:
+            title = title.lower()
+            queryset = queryset.filter(title__icontains=title)
         if city:
-            queryset = queryset.filter(city__icontains=city.lower())
-        if place:
-            queryset = queryset.filter(place__icontains=place.lower())
+            city = city
+            queryset = queryset.filter(city__icontains=city)
         if date:
             queryset = queryset.filter(date__date=date)
         if is_online:
@@ -166,15 +167,28 @@ class TestAnnouncementsView(ListView):
 
 class CreateTestAnnouncementView(LoginRequiredMixin, CreateView):
     model = TestAnnouncement
-    fields = ['title', '...']
-    template_name = '...'
-    success_url = reverse_lazy('...')
-    login_url = 'accounts/signup'
+    fields = ['title',
+              'description',
+              'city',
+              'address',
+              'date',
+              'is_online',
+              'conditions',
+              'contact']
+    template_name = 'main_app/test_announcement_create.html'
+    success_url = reverse_lazy('main:test_anns')
+    login_url = reverse_lazy('accounts/signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
         return super().form_valid(form)
 
+
+class DeleteTestAnnouncementView(LoginRequiredMixin, DeleteView):
+    model = TestAnnouncement
+    template_name = 'main_app/test_announcement_delete.html'
+    login_url = reverse_lazy('accounts:signup')
+    success_url = reverse_lazy('main:test_anns')
 
 
 class TournamentAnnouncementsView(ListView):
@@ -182,11 +196,85 @@ class TournamentAnnouncementsView(ListView):
     template_name = 'main_app/tournament_announcements.html'
     context_object_name = 'tournament_announcements'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = TournamentAnnouncementFilterForm()
+        return context
+
+
+    def get_queryset(self):
+        queryset = TournamentAnnouncement.objects.select_related('boardgame', 'created_by').all()
+        game = self.request.GET.get('game')
+        city = self.request.GET.get('city')
+        date = self.request.GET.get('date')
+        is_online = self.request.GET.get('is_online')
+
+        if game:
+            queryset = queryset.filter(boardgame__title__icontains=game.lower())
+        if city:
+            queryset = queryset.filter(city__icontains=city.lower())
+        if date:
+            queryset = queryset.filter(date__date=date)
+        if is_online:
+            queryset = queryset.filter(is_online=True)
+        return queryset
+
+
+class TournamentAnnouncementCreateView(LoginRequiredMixin, CreateView):
+    form_class = TournamentAnnouncementForm
+    template_name = 'main_app/tournament_announcement_create.html'
+    success_url = reverse_lazy('main:tournament_anns')
+    login_url = reverse_lazy('accounts:signup')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+class TournamentAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
+    model = TournamentAnnouncement
+    template_name = 'main_app/tournament_announcement_delete.html'
+    login_url = reverse_lazy('accounts:signup')
+    success_url = reverse_lazy('main:tournament_anns')
+
 
 class SaleAnnouncementsView(ListView):
     model = SaleAnnouncement
     template_name = 'main_app/sale_announcements.html'
     context_object_name = 'sale_announcements'
+
+    def get_queryset(self):
+        queryset = SaleAnnouncement.objects.select_related('boardgame', 'created_by').all()
+        game = self.request.GET.get('game')
+        city = self.request.GET.get('city')
+        if game:
+            queryset = queryset.filter(boardgame__title__icontains=game.lower())
+        if city:
+            queryset = queryset.filter(city__contains=city.lower())
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form'] = SaleAnnouncementFilterForm()
+        return context
+
+
+class SaleAnnouncementCreateView(LoginRequiredMixin, CreateView):
+    form_class = SaleAnnouncementForm
+    template_name = 'main_app/sale_announcement_create.html'
+    login_url = reverse_lazy('accounts:signup')
+    success_url = reverse_lazy('main:sale_anns')
+
+    def form_valid(self, form):
+        form.instance.created_by = self.request.user
+        return super().form_valid(form)
+
+
+class SaleAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
+    model = SaleAnnouncement
+    template_name = 'main_app/sale_announcement_delete.html'
+    login_url = reverse_lazy('accounts:signup')
+    success_url = reverse_lazy('main:sale_anns')
 
 
 def home_page(request):

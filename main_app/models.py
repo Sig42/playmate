@@ -98,7 +98,7 @@ class GameAnnouncement(Announcement):
     class Meta:
         verbose_name = "Анонс игры"
         verbose_name_plural = "Анонсы игр"
-        ordering = ['-date']
+        ordering = ['date']
 
 
 class TestAnnouncement(Announcement):
@@ -121,7 +121,7 @@ class TestAnnouncement(Announcement):
     class Meta:
         verbose_name = "Анонс тестирования игр"
         verbose_name_plural = "Анонсы тестирования игр"
-        ordering = ['-date']
+        ordering = ['date']
 
 
 class TournamentAnnouncement(Announcement):
@@ -146,7 +146,7 @@ class TournamentAnnouncement(Announcement):
     class Meta:
         verbose_name = "Анонс турнира"
         verbose_name_plural = "Анонсы турниров"
-        ordering = ['-date']
+        ordering = ['date']
 
 
 class SaleAnnouncement(models.Model):

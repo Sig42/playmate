@@ -1,5 +1,5 @@
 from django import forms
-from .models import BoardGame, GameAnnouncement
+from .models import BoardGame, GameAnnouncement, TournamentAnnouncement, SaleAnnouncement
 
 
 class BoardGameForm(forms.ModelForm):
@@ -28,7 +28,7 @@ class BoardGameForm(forms.ModelForm):
         return data
 
 
-class GameAnnouncementFilterForm(forms.Form):
+class GameAnnouncementsFilterForm(forms.Form):
     game = forms.CharField(label='Название игры',
                            help_text='Попробуйте и на русском и на языке оригинала. '
                                      'Можно ввести только часть названия игры.',
@@ -69,7 +69,46 @@ class GameAnnouncementForm(forms.ModelForm):
         }
 
 
-class GameAnnouncementFilterForm(forms.Form):
+class TestAnnouncementsFilterForm(forms.Form):
+    title = forms.CharField(label='Название игры',
+                            help_text='Можно ввести только часть названия игры',
+                            max_length=100,
+                            strip=True,
+                            required=False)
+
+    city = forms.CharField(label='Город',
+                           help_text='Можно ввести только часть названия города',
+                           max_length=100,
+                           strip=True,
+                           required=False)
+
+    date = forms.DateField(label='Дата проведения',
+                           required=False,
+                           widget=forms.DateInput(attrs={'type': 'date'}))
+
+    is_online = forms.BooleanField(label='Будет проходить онлайн',
+                                   required=False)
+
+
+class TournamentAnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = TournamentAnnouncement
+        fields = ['boardgame',
+                  'city',
+                  'address',
+                  'date',
+                  'is_online',
+                  'conditions',
+                  'contact']
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if city:
+            return city.lower()
+        return city
+
+
+class TournamentAnnouncementFilterForm(forms.Form):
     game = forms.CharField(label='Название игры',
                            help_text='Попробуйте и на русском и на языке оригинала. '
                                      'Можно ввести только часть названия игры.',
@@ -81,13 +120,44 @@ class GameAnnouncementFilterForm(forms.Form):
                            max_length=100,
                            strip=True,
                            required=False)
-    place = forms.CharField(label='Место',
-                           help_text='Название заведения, в котором проходит игра',
-                           max_length=100,
-                           strip=True,
-                           required=False)
     date = forms.DateField(label='Дата проведения',
                            required=False,
                            widget=forms.DateInput(attrs={'type': 'date'}))
     is_online = forms.BooleanField(label='Искать онлайн игры',
                                    required=False)
+
+
+class SaleAnnouncementForm(forms.ModelForm):
+    class Meta:
+        model = SaleAnnouncement
+        fields =['boardgame',
+                 'price',
+                 'description',
+                 'city',
+                 'contact']
+
+    def clean_city(self):
+        city = self.cleaned_data.get('city')
+        if city:
+            return city.lower()
+        return city
+
+
+class SaleAnnouncementFilterForm(forms.Form):
+    game = forms.CharField(label='Название игры',
+                           help_text='Попробуйте и на русском и на языке оригинала. '
+                                     'Можно ввести только часть названия игры.',
+                           max_length=100,
+                           strip=True,
+                           required=False)
+    city = forms.CharField(label='Город',
+                           help_text='Можно ввести только часть названия города.',
+                           max_length=100,
+                           strip=True,
+                           required=False)
+
+    def clean_game(self):
+        game = self.cleaned_data.get('game')
+        if game:
+            return game.lower()
+        return game
