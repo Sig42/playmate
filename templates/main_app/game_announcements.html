@@ -38,7 +38,7 @@
                                 <p>Онлайн: {{ ann.is_online }}</p>
                                 <p>Контакты: {{ ann.contact }}</p>
                                 <p>Описание: {{ ann.conditions }}</p>
-                                {% if request.user == ann.created_by %}
+                                {% if user == ann.created_by %}
                                 <a class="btn btn-primary"
                                    href="{% url 'main:delete_game_ann' ann.pk %}">Удалить сообщение</a>
                                 {% endif %}

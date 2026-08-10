@@ -36,7 +36,7 @@
                             <p>Онлайн: {{ ann.is_online }}</p>
                             <p>Условия: {{ ann.conditions }}</p>
                             <p>Контакты: {{ ann.contact }}</p>
-                            {% if request.user == ann.created_by %}
+                            {% if user == ann.created_by %}
                                 <a href="{% url 'main:delete_tournament_ann' ann.pk %}"
                                    class="btn btn-primary">Удалить объявление</a>
                             {% endif %}

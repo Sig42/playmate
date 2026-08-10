@@ -36,7 +36,7 @@
                             <p>Город: {{ ann.city }}</p>
                             <p>Контакты: {{ ann.contact }}</p>
                             <p>Объявление создано: {{ ann.created_at }}</p>
-                            {% if request.user == ann.created_by %}
+                            {% if user == ann.created_by %}
                             <a href="{% url 'main:delete_sale_anns' ann.pk %}"
                                class="btn btn-primary">Удалить объявление</a>
                             {% endif %}

@@ -45,7 +45,7 @@
                         </div>
                         <a href="{% url 'main:add_liked_game' game.pk %}" class="btn btn-primary">Хочу сыграть</a>
                         <a href="{% url 'main:game' game.pk %}" class="btn btn-primary">Список игроков</a>
-                        {% if request.user == game.created_by %}
+                        {% if user == game.created_by %}
                             <a href="{% url 'main:delete_game' game.pk %}" class="btn btn-primary">Удалить игру</a>
                         {% endif %}
                     </div>
