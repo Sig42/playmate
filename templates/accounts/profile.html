@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Профиль игрока
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h5 class="card-title">Профиль</h5>
+                    <div class="card-text">
+                        <p>Имя: {{ user.username }}</p>
+                        <p>Контакты: {{ user.first_name|default:"не указаны" }}</p>
+                        <p>Почта: {{ user.email }}</p>
+                        <a href="{% url 'accounts:profile_edit' %}" class="btn btn-primary">Редактировать</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

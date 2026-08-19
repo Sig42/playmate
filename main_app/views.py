@@ -3,7 +3,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
-from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.decorators import login_required
 
 from .models import BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement
 from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncementsFilterForm,
@@ -53,7 +53,6 @@ class BoardGameView(DetailView):
 class CreateGameView(LoginRequiredMixin, CreateView):
     form_class = BoardGameForm
     template_name = 'main_app/board_game_create.html'
-    login_url = reverse_lazy('accounts/signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -63,7 +62,6 @@ class CreateGameView(LoginRequiredMixin, CreateView):
 class DeleteGameView(LoginRequiredMixin, DeleteView):
     model = BoardGame
     template_name = 'main_app/board_game_delete.html'
-    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:games')
 
 
@@ -121,7 +119,6 @@ class CreateGameAnnouncementView(LoginRequiredMixin, CreateView):
               'conditions']
     template_name = 'main_app/game_announcement_create.html'
     success_url = reverse_lazy('main:game_anns')
-    login_url = reverse_lazy('accounts/signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -131,7 +128,6 @@ class CreateGameAnnouncementView(LoginRequiredMixin, CreateView):
 class DeleteGameAnnouncement(LoginRequiredMixin, DeleteView):
     model = GameAnnouncement
     template_name = 'main_app/game_announcement_delete.html'
-    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:game_anns')
 
 
@@ -177,7 +173,6 @@ class CreateTestAnnouncementView(LoginRequiredMixin, CreateView):
               'contact']
     template_name = 'main_app/test_announcement_create.html'
     success_url = reverse_lazy('main:test_anns')
-    login_url = reverse_lazy('accounts/signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -187,7 +182,6 @@ class CreateTestAnnouncementView(LoginRequiredMixin, CreateView):
 class DeleteTestAnnouncementView(LoginRequiredMixin, DeleteView):
     model = TestAnnouncement
     template_name = 'main_app/test_announcement_delete.html'
-    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:test_anns')
 
 
@@ -224,7 +218,6 @@ class TournamentAnnouncementCreateView(LoginRequiredMixin, CreateView):
     form_class = TournamentAnnouncementForm
     template_name = 'main_app/tournament_announcement_create.html'
     success_url = reverse_lazy('main:tournament_anns')
-    login_url = reverse_lazy('accounts:signup')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user
@@ -234,7 +227,6 @@ class TournamentAnnouncementCreateView(LoginRequiredMixin, CreateView):
 class TournamentAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
     model = TournamentAnnouncement
     template_name = 'main_app/tournament_announcement_delete.html'
-    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:tournament_anns')
 
 
@@ -262,7 +254,6 @@ class SaleAnnouncementsView(ListView):
 class SaleAnnouncementCreateView(LoginRequiredMixin, CreateView):
     form_class = SaleAnnouncementForm
     template_name = 'main_app/sale_announcement_create.html'
-    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:sale_anns')
 
     def form_valid(self, form):
@@ -273,15 +264,15 @@ class SaleAnnouncementCreateView(LoginRequiredMixin, CreateView):
 class SaleAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
     model = SaleAnnouncement
     template_name = 'main_app/sale_announcement_delete.html'
-    login_url = reverse_lazy('accounts:signup')
     success_url = reverse_lazy('main:sale_anns')
 
 
 def home_page(request):
-    return render(request, 'base.html', {'data': 'Hello from view!'})
+    return render(request, 'base.html')
 
 
 # Function to add a game to liked_games field of User model
+@login_required
 def add_liked_game(request, pk):
     user = request.user
     user.liked_games.add(pk)

@@ -9,24 +9,24 @@
 
 {% block content %}
 <div class="container-sm mt-5">
-        <div class="row justify-content-center">
-            <div class="col col-lg-10">
-                <div class="card mt-2">
-                    <div class="card-body">
-                        <h5 class="card-title">{{ player.username }} хочет сыграть в:</h5>
-                        <div class="card-text">
-                            {% for game in games %}
-                                <p><a class="link-primary"
-                                      href="{% url 'main:game' game.pk %}">{{ game.title|capfirst }}</a></p>
-                            {% empty %}
-                                У игрока пока нет пожеланий.
-                            {% endfor %}
-                            <a href="!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"
-                               class="btn btn-primary mt-4">Написать игроку</a>
-                        </div>
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            <div class="card mt-2">
+                <div class="card-body">
+                    <h5 class="card-title">{{ player.username }}</h5>
+                    <div class="card-text">
+                        <p>Контакты: {{ player.first_name|default:' не указаны' }}</p>
+                        <p>Хочет сыграть в:</p>
+                        {% for game in games %}
+                            <p><a class="link-primary"
+                                  href="{% url 'main:game' game.pk %}">{{ game.title|capfirst }}</a></p>
+                        {% empty %}
+                            У игрока пока нет пожеланий.
+                        {% endfor %}
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
 {% endblock %}

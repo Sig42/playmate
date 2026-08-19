@@ -5,17 +5,15 @@
 
 {% block content %}
 <div class="container-sm mt-5">
-        <div class="row justify-content-center">
-            <div class="col col-lg-10">
-                <h2> Регистрация </h2>
-                <form method="post" class="form">
-                    {% csrf_token %}
-                    {% bootstrap_form form %}
-
-                    {% bootstrap_button button_type='submit' content='OK' %}
-                </form>
-            </div>
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            <h2> Регистрация </h2>
+            <form method="post" class="form">
+                {% csrf_token %}
+                {% bootstrap_form form %}
+                {% bootstrap_button button_type='submit' content='OK' %}
+            </form>
         </div>
     </div>
-
+</div>
 {% endblock %}
