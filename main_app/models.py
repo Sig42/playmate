@@ -1,6 +1,8 @@
 from django.db import models
 from django.urls import reverse
 from django.contrib.auth.models import User
+from django.db.models import Q
+from django.utils import timezone
 
 
 class BoardGame(models.Model):
@@ -23,8 +25,7 @@ class BoardGame(models.Model):
                                    on_delete=models.SET_NULL,
                                    null=True)
     players= models.ManyToManyField(User,
-                                    related_name='liked_games',
-                                    null=True)
+                                    related_name='liked_games')
 
     def __str__(self):
         return self.title
@@ -186,4 +187,33 @@ class SaleAnnouncement(models.Model):
     class Meta:
         verbose_name = "Объявление о продаже"
         verbose_name_plural = "Объявления о продаже"
+        ordering = ['-created_at']
+
+
+class MessagesManager(models.Manager):
+    def get_my_msgs(self, user):
+        return self.filter(Q(to_user=user) | Q(from_user=user))
+
+
+class Message(models.Model):
+    from_user = models.ForeignKey(User,
+                                  on_delete=models.CASCADE,
+                                  null=False,
+                                  related_name='sent_messages')
+    to_user = models.ForeignKey(User,
+                                on_delete=models.CASCADE,
+                                null=False,
+                                related_name='received_messages')
+    text = models.TextField(max_length=2000,
+                            null=False,
+                            blank=False)
+    created_at = models.DateTimeField(default=timezone.now)
+    read = models.BooleanField(default=False,
+                               null=False)
+    objects = models.Manager()
+    mngr = MessagesManager()
+
+    class Meta:
+        verbose_name = "Сообщения"
+        verbose_name_plural = "Сообщения"
         ordering = ['-created_at']

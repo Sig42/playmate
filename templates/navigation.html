@@ -12,27 +12,32 @@
           <a class="nav-link {% active_url request 'home_page' %} navbar-brand" href="/">Playmate</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Сообщения</a>
+          <a class="nav-link {% active_url request 'main:playmates' %}"
+             href="{% url 'main:playmates' %}">Сообщения</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% active_url request 'main:games' %}"
              href="{% url 'main:games' %}">Игры</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request 'main:game_anns' %}" href="{% url 'main:game_anns' %}">Игротеки</a>
+          <a class="nav-link {% active_url request 'main:game_anns' %}"
+             href="{% url 'main:game_anns' %}">Игротеки</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request 'main:test_anns' %}" href="{% url 'main:test_anns' %}">Разработчики</a>
+          <a class="nav-link {% active_url request 'main:test_anns' %}"
+             href="{% url 'main:test_anns' %}">Разработчики</a>
         </li>
         <li class="nav-item">
           <a class="nav-link {% active_url request 'main:tournament_anns' %}"
              href="{% url 'main:tournament_anns' %}">Турниры</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request 'main:sale_anns' %}" href="{% url 'main:sale_anns' %}">Барахолка</a>
+          <a class="nav-link {% active_url request 'main:sale_anns' %}"
+             href="{% url 'main:sale_anns' %}">Барахолка</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}" href="#">Инфо</a>
+          <a class="nav-link {% active_url request '!!!!!!!!!!!!!!!!!!!!!!!' %}"
+             href="#">Инфо</a>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0">

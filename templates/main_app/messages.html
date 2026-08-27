@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Мой чат с пользователем {{ playmates_name }}
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+    {% for message in messages %}
+        <div class="row mb-3 {% if message.from_user == request.user %}justify-content-start{% else %}justify-content-end{% endif %}">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <p class="card-text mb-0">{{ message.text }}</p>
+                        <small class="text-muted">
+                            {{ message.from_user.username }} - {{ message.created_at|timesince }} назад
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}

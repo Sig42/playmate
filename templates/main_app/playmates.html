@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
+{% block title %}
+    Мои переписки
+{% endblock %}
+
+{% block content %}
+<div class="container-sm mt-5">
+    <div class="row pb-2 justify-content-center">
+        <div class="col col-lg-10">
+            <h2> Игроки, с которыми я переписываюсь: </h2>
+            <hr>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            {% for playmate in playmates %}
+                <p><a href="{% url 'main:messages' playmate.pk %}">{{ playmate.username }}</a></p>
+            {% empty %}
+                <p>Пока ни с кем не переписывался</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

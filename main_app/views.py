@@ -1,11 +1,13 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import User
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
+from django.db.models import Q
 
-from .models import BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement
+from .models import (BoardGame, GameAnnouncement, TestAnnouncement, TournamentAnnouncement, SaleAnnouncement,
+                     Message)
 from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncementsFilterForm,
                     TournamentAnnouncementFilterForm, TournamentAnnouncementForm, SaleAnnouncementFilterForm,
                     SaleAnnouncementForm)
@@ -14,13 +16,12 @@ from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncement
 # Проверить все вьюхи и шаблоны на наличие запросов N+1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 class PlayersView(ListView):
-    model = get_user_model()
+    model = User
     template_name = 'main_app/players.html'
     context_object_name = 'players'
 
     def get_queryset(self):
-        user = get_user_model()
-        queryset = user.objects.prefetch_related('liked_games').all()
+        queryset = User.objects.prefetch_related('liked_games').all()
         return queryset
 
 
@@ -66,7 +67,7 @@ class DeleteGameView(LoginRequiredMixin, DeleteView):
 
 
 class PlayerView(DetailView):
-    model = get_user_model()
+    model = User
     template_name = 'main_app/player.html'
     context_object_name = 'player'
 
@@ -266,6 +267,33 @@ class SaleAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
     template_name = 'main_app/sale_announcement_delete.html'
     success_url = reverse_lazy('main:sale_anns')
 
+
+class PlaymatesListView(LoginRequiredMixin, ListView):
+    model = User
+    template_name = 'main_app/playmates.html'
+    context_object_name = 'playmates'
+
+    def get_queryset(self):
+        queryset = User.objects.filter(Q(sent_messages__to_user=self.request.user)
+                                       | Q(received_messages__from_user=self.request.user)).distinct()
+        return queryset
+
+
+class MessagesListView(LoginRequiredMixin, ListView):
+    model = Message
+    template_name = 'main_app/messages.html'
+    context_object_name = 'messages'
+
+    def get_queryset(self):
+        playmate_id = self.kwargs.get('pk')
+        queryset = Message.mngr.get_my_msgs(user=self.request.user).filter(Q(from_user__pk=playmate_id) |
+                                                                           Q(to_user__pk=playmate_id))
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['playmates_name'] = User.objects.get(pk=self.kwargs.get('pk')).username
+        return context
 
 def home_page(request):
     return render(request, 'base.html')
