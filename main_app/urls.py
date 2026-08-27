@@ -65,6 +65,6 @@ urlpatterns = [
          views.PlaymatesListView.as_view(),
          name='playmates'),
     path('playmate/<int:pk>/messages/',
-         views.MessagesListView.as_view(),
+         views.MessageCreateView.as_view(),
          name='messages'),
 ]

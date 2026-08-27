@@ -1,6 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
 from django.contrib.auth.decorators import login_required
@@ -279,6 +279,7 @@ class PlaymatesListView(LoginRequiredMixin, ListView):
         return queryset
 
 
+"""
 class MessagesListView(LoginRequiredMixin, ListView):
     model = Message
     template_name = 'main_app/messages.html'
@@ -292,8 +293,36 @@ class MessagesListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['playmates_name'] = User.objects.get(pk=self.kwargs.get('pk')).username
+        context['playmate_name'] = get_object_or_404(User, pk=self.kwargs.get('pk')).username
         return context
+
+"""
+
+
+class MessageCreateView(CreateView):
+    model = Message
+    fields = ['text']
+    template_name = 'main_app/messages.html'
+
+    def get_success_url(self):
+        pk = self.kwargs.get('pk')
+        if pk:
+            return reverse_lazy('main:messages', kwargs={'pk': pk})
+        return reverse_lazy('main:playmates')
+
+    def form_valid(self, form):
+        form.instance.from_user = self.request.user
+        form.instance.to_user = get_object_or_404(User, pk=self.kwargs.get('pk'))
+        return super().form_valid(form)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        playmate_id = self.kwargs.get('pk')
+        user = self.request.user
+        message_filters = (Q(from_user__pk=playmate_id) | Q(to_user__pk=playmate_id))
+        context['messages'] = Message.mngr.get_my_msgs(user=user).filter(message_filters)
+        return context
+
 
 def home_page(request):
     return render(request, 'base.html')
