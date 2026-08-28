@@ -27,6 +27,19 @@
                         <small class="text-muted">
                             {{ message.from_user.username }} - {{ message.created_at|timesince }} назад
                         </small>
+                        {% if message.to_user == request.user %}
+                            {% if message.read == True %}
+                                <button class="btn btn-primary" disabled>
+                                    Прочитано
+                                </button>
+                            {% else %}
+                            <div class="mt-2">
+                                <a href="do-message-read" class="btn btn-primary">
+                                Отметить прочитанным
+                                </a>
+                            </div>
+                            {% endif %}
+                        {% endif %}
                     </div>
                 </div>
             </div>

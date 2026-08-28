@@ -74,6 +74,7 @@ class PlayerView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['games'] = self.object.liked_games.all()
+        context['pk'] = self.kwargs.get('pk')
         return context
 
 
@@ -325,7 +326,13 @@ class MessageCreateView(CreateView):
 
 
 def home_page(request):
-    return render(request, 'base.html')
+    context = {'unread': False}
+    if request.user.is_authenticated:
+        user = request.user
+        is_unread = Message.objects.filter(to_user=user, read=False)
+        if is_unread:
+            context['unread'] = True
+    return render(request, 'base.html', context=context)
 
 
 # Function to add a game to liked_games field of User model
