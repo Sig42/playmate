@@ -67,4 +67,7 @@ urlpatterns = [
     path('playmate/<int:pk>/messages/',
          views.MessageCreateView.as_view(),
          name='messages'),
+    path('message/<int:pk>/update/',
+         views.update_message_view,
+         name='update_message')
 ]

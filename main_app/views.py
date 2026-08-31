@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
+from django.http import HttpResponseForbidden, HttpResponseRedirect
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic import ListView, DetailView, CreateView, DeleteView
@@ -341,3 +342,13 @@ def add_liked_game(request, pk):
     user = request.user
     user.liked_games.add(pk)
     return render(request, 'main_app/liked_game_added.html')
+
+@login_required
+def update_message_view(request, pk):
+    message =  get_object_or_404(Message, pk=pk)
+    if message.to_user != request.user:
+        return HttpResponseForbidden("Доступ к этой странице запрещен. А ты что хотел?")
+    redirect_url = request.GET.get('next', '/')
+    message.read = True
+    message.save()
+    return HttpResponseRedirect(redirect_url)
