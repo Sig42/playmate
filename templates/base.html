@@ -1,5 +1,8 @@
 {% load django_bootstrap5 %}
 {% load static %}
+{% bootstrap_css %}
+{% bootstrap_javascript %}
+
 <!DOCTYPE html>
 <html lang="ru" data-bs-theme="dark">
 <head>
@@ -8,7 +11,6 @@
     <title>
         {% block title %} Главная {% endblock %}
     </title>
-    {% bootstrap_css %}
 </head>
 <body>
     {% include "navigation.html" %}
@@ -18,6 +20,7 @@
 
     {% block content %}
     <div class="container-sm mt-5">
+
         {% if unread %}
             <div class="row mb-5 justify-content-center">
                 <div class="col col-lg-10">
@@ -25,6 +28,7 @@
                 </div>
             </div>
         {% endif %}
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <h3>
@@ -45,15 +49,23 @@
                     Так что зовите сюда всех знакомых, чем нас больше - тем больше шансов создать свою
                     команду мечты для настолок!
                 </p>
-                <h3>
-                    Важно:
-                </h3>
-                <p>
-                    Я ещё не запилил чат для сайта, поэтому обязательно указывайте свои контакты! Иначе люди
-                    не смогут с Вами связаться.
-                </p>
             </div>
         </div>
+
+        <div class="row mb-5 justify-content-center">
+            <div class="col col-lg-10">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Сообщения</h5>
+                        <p class="card-text">
+                            Здесь Ваша переписка с другими игроками.
+                        </p>
+                        <a href="{% url 'main:playmates' %}" class="btn btn-primary">Перейти</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <div class="card">
@@ -68,6 +80,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <div class="card">
@@ -82,6 +95,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <div class="card">
@@ -98,6 +112,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <div class="card">
@@ -111,6 +126,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <div class="card">
@@ -124,6 +140,7 @@
                 </div>
             </div>
         </div>
+
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <div class="card">
@@ -139,6 +156,9 @@
         </div>
     </div>
     {% endblock %}
-    {% bootstrap_javascript %}
+{% include "pagination.html" %}
+<footer>
+    <div class="row justify-content-center">MyCorp. 2023. All rights reserved.</div>
+</footer>
 </body>
 </html>

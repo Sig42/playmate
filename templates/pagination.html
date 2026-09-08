@@ -1,0 +1,28 @@
+<div class="container-sm mt-3">
+    <div class="row justify-content-end">
+        <div class="col my-4">
+            <nav aria-label="Page navigation">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a href="?page={{ page_obj.previous_page_number }}"
+                               class="page-link"
+                               aria-label="previous"><span aria-hidden="true">&laquo;</span></a>
+                        </li>
+                    {% endif %}
+
+                    <li class="page-item">
+                        <div class="page-link">{{ page_obj.number }} из {{ page_obj.paginator.num_pages }}</div>
+                    </li>
+
+                    {% if page_obj.has_next %}
+                    <li class="page-item">
+                        <a href="?page={{ page_obj.next_page_number }}"
+                           class="page-link"><span aria-hidden="true">&raquo;</span></a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </nav>
+        </div>
+    </div>
+</div>

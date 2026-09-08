@@ -20,6 +20,7 @@ class PlayersView(ListView):
     model = User
     template_name = 'main_app/players.html'
     context_object_name = 'players'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = User.objects.prefetch_related('liked_games').all()
@@ -30,6 +31,7 @@ class BoardGamesView(ListView):
     model = BoardGame
     template_name = 'main_app/board_games.html'
     context_object_name = 'board_games'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -83,6 +85,7 @@ class GameAnnouncementsView(ListView):
     model = GameAnnouncement
     template_name = 'main_app/game_announcements.html'
     context_object_name = 'game_announcements'
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -138,6 +141,7 @@ class TestAnnouncementsView(ListView):
     model = TestAnnouncement
     template_name = 'main_app/test_announcements.html'
     context_object_name = 'test_announcements'
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -192,6 +196,7 @@ class TournamentAnnouncementsView(ListView):
     model = TournamentAnnouncement
     template_name = 'main_app/tournament_announcements.html'
     context_object_name = 'tournament_announcements'
+    paginate_by = 2
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -237,6 +242,7 @@ class SaleAnnouncementsView(ListView):
     model = SaleAnnouncement
     template_name = 'main_app/sale_announcements.html'
     context_object_name = 'sale_announcements'
+    paginate_by = 2
 
     def get_queryset(self):
         queryset = SaleAnnouncement.objects.select_related('boardgame', 'created_by').all()
@@ -279,26 +285,6 @@ class PlaymatesListView(LoginRequiredMixin, ListView):
         queryset = User.objects.filter(Q(sent_messages__to_user=self.request.user)
                                        | Q(received_messages__from_user=self.request.user)).distinct()
         return queryset
-
-
-"""
-class MessagesListView(LoginRequiredMixin, ListView):
-    model = Message
-    template_name = 'main_app/messages.html'
-    context_object_name = 'messages'
-
-    def get_queryset(self):
-        playmate_id = self.kwargs.get('pk')
-        queryset = Message.mngr.get_my_msgs(user=self.request.user).filter(Q(from_user__pk=playmate_id) |
-                                                                           Q(to_user__pk=playmate_id))
-        return queryset
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context['playmate_name'] = get_object_or_404(User, pk=self.kwargs.get('pk')).username
-        return context
-
-"""
 
 
 class MessageCreateView(CreateView):

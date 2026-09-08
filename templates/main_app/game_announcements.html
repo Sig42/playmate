@@ -9,46 +9,46 @@
 
 {% block content %}
 <div class="container-sm mt-5">
-        <div class="row justify-content-center">
-            <div class="col col-lg-10">
-                <h2 class="mb-4">Здесь Вы можете посмотреть объявления о проводимых
-                    играх или добавить свое объявление.</h2>
-                <a href="{% url 'main:create_game_ann' %}" class="btn btn-primary">Добавить объявление</a>
-                <hr>
-            </div>
-        </div>
-        <div class="row justify-content-center">
-            <div class="col-lg-3">
-                <h2 class="mb-4">Фильтровать объявления:</h2>
-                <form method="get" class="form">
-                    {% bootstrap_form form %}
-                    {% bootstrap_button button_type='submit' content='OK' %}
-                </form>
-            </div>
-            <div class="col-lg-9">
-                {% for ann in game_announcements %}
-                    <div class="card mt-2">
-                        <div class="card-body">
-                            <h5 class="card-title">{{ ann.boardgame.title|capfirst }}</h5>
-                            <div class="card-text">
-                                <p>Город: {{ ann.city|capfirst }}</p>
-                                <p>Адрес: {{ ann.address }}</p>
-                                <p>Место: {{ ann.place }}</p>
-                                <p>Дата, время проведения: {{ ann.date }}</p>
-                                <p>Онлайн: {{ ann.is_online }}</p>
-                                <p>Контакты: {{ ann.contact }}</p>
-                                <p>Описание: {{ ann.conditions }}</p>
-                                {% if user == ann.created_by %}
-                                <a class="btn btn-primary"
-                                   href="{% url 'main:delete_game_ann' ann.pk %}">Удалить сообщение</a>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                {% empty %}
-                    <p>Пока объявлений нет.</p>
-                {% endfor %}
-            </div>
+    <div class="row justify-content-center">
+        <div class="col col-lg-10">
+            <h2 class="mb-4">Здесь Вы можете посмотреть объявления о проводимых
+                играх или добавить свое объявление.</h2>
+            <a href="{% url 'main:create_game_ann' %}" class="btn btn-primary">Добавить объявление</a>
+            <hr>
         </div>
     </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-3">
+            <h2 class="mb-4">Фильтровать объявления:</h2>
+            <form method="get" class="form">
+                {% bootstrap_form form %}
+                {% bootstrap_button button_type='submit' content='OK' %}
+            </form>
+        </div>
+        <div class="col-lg-9">
+            {% for ann in game_announcements %}
+                <div class="card mt-2">
+                    <div class="card-body">
+                        <h5 class="card-title">{{ ann.boardgame.title|capfirst }}</h5>
+                        <div class="card-text">
+                            <p>Город: {{ ann.city|capfirst }}</p>
+                            <p>Адрес: {{ ann.address }}</p>
+                            <p>Место: {{ ann.place }}</p>
+                            <p>Дата, время проведения: {{ ann.date }}</p>
+                            <p>Онлайн: {{ ann.is_online }}</p>
+                            <p>Контакты: {{ ann.contact }}</p>
+                            <p>Описание: {{ ann.conditions }}</p>
+                            {% if user == ann.created_by %}
+                            <a class="btn btn-primary"
+                               href="{% url 'main:delete_game_ann' ann.pk %}">Удалить сообщение</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% empty %}
+                <p>Пока объявлений нет.</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
 {% endblock %}
