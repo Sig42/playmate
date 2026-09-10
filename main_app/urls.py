@@ -1,4 +1,5 @@
 from django.urls import path
+from django.views.generic import TemplateView
 from . import views
 
 app_name = 'main'
@@ -69,5 +70,8 @@ urlpatterns = [
          name='messages'),
     path('message/<int:pk>/update/',
          views.update_message_view,
-         name='update_message')
+         name='update_message'),
+    path('info/',
+         TemplateView.as_view(template_name='main_app/info.html'),
+         name='info')
 ]

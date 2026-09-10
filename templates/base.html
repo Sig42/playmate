@@ -15,20 +15,16 @@
 <body>
     {% include "navigation.html" %}
 
-    {% block admin_announcement %}
-    {% endblock %}
+    {% if unread %}
+        <div class="row my-3 justify-content-center">
+            <div class="col col-lg-10 text-center text-warning">
+                <h2>У Вас есть непрочитанные сообщения</h2>
+            </div>
+        </div>
+    {% endif %}
 
     {% block content %}
     <div class="container-sm mt-5">
-
-        {% if unread %}
-            <div class="row mb-5 justify-content-center">
-                <div class="col col-lg-10">
-                    <h2>Есть непрочитанные</h2>
-                </div>
-            </div>
-        {% endif %}
-
         <div class="row mb-5 justify-content-center">
             <div class="col col-lg-10">
                 <h3>
@@ -46,8 +42,8 @@
                     интернета.
                     Здесь Вы можете найти только тех людей, которые зарегистрировались на этом сайте.
                     Все просто.
-                    Так что зовите сюда всех знакомых, чем нас больше - тем больше шансов создать свою
-                    команду мечты для настолок!
+                    Так что зовите сюда всех &#128578;<br>
+                    Чем больше будет людей - тем больше шансов собрать свою команду мечты по настолкам!
                 </p>
             </div>
         </div>
@@ -149,16 +145,18 @@
                         <p class="card-text">
                             Здесь чуть больше слов про сайт.
                         </p>
-                        <a href="#" class="btn btn-primary">Go somewhere</a>
+                        <a href="{% url 'main:info' %}" class="btn btn-primary">Перейти</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
     {% endblock %}
-{% include "pagination.html" %}
-<footer>
-    <div class="row justify-content-center">MyCorp. 2023. All rights reserved.</div>
-</footer>
+{% if page_obj %}
+    {% include "pagination.html" %}
+{% endif %}
 </body>
+<footer class="footer mt-auto bg-dark">
+        <div class="container text-white text-center">Powered by Django | Styled by Bootstrap</div>
+</footer>
 </html>

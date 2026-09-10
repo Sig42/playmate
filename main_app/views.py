@@ -12,7 +12,7 @@ from .models import (BoardGame, GameAnnouncement, TestAnnouncement, TournamentAn
 from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncementsFilterForm,
                     TournamentAnnouncementFilterForm, TournamentAnnouncementForm, SaleAnnouncementFilterForm,
                     SaleAnnouncementForm)
-
+from .mixins import AuthorRequiredMixin
 
 # Проверить все вьюхи и шаблоны на наличие запросов N+1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
@@ -20,7 +20,7 @@ class PlayersView(ListView):
     model = User
     template_name = 'main_app/players.html'
     context_object_name = 'players'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = User.objects.prefetch_related('liked_games').all()
@@ -31,7 +31,7 @@ class BoardGamesView(ListView):
     model = BoardGame
     template_name = 'main_app/board_games.html'
     context_object_name = 'board_games'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = super().get_queryset()
@@ -63,7 +63,7 @@ class CreateGameView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DeleteGameView(LoginRequiredMixin, DeleteView):
+class DeleteGameView(AuthorRequiredMixin, DeleteView):
     model = BoardGame
     template_name = 'main_app/board_game_delete.html'
     success_url = reverse_lazy('main:games')
@@ -85,7 +85,7 @@ class GameAnnouncementsView(ListView):
     model = GameAnnouncement
     template_name = 'main_app/game_announcements.html'
     context_object_name = 'game_announcements'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -131,7 +131,7 @@ class CreateGameAnnouncementView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DeleteGameAnnouncement(LoginRequiredMixin, DeleteView):
+class DeleteGameAnnouncement(AuthorRequiredMixin, DeleteView):
     model = GameAnnouncement
     template_name = 'main_app/game_announcement_delete.html'
     success_url = reverse_lazy('main:game_anns')
@@ -141,7 +141,7 @@ class TestAnnouncementsView(ListView):
     model = TestAnnouncement
     template_name = 'main_app/test_announcements.html'
     context_object_name = 'test_announcements'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -186,7 +186,7 @@ class CreateTestAnnouncementView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class DeleteTestAnnouncementView(LoginRequiredMixin, DeleteView):
+class DeleteTestAnnouncementView(AuthorRequiredMixin, DeleteView):
     model = TestAnnouncement
     template_name = 'main_app/test_announcement_delete.html'
     success_url = reverse_lazy('main:test_anns')
@@ -196,7 +196,7 @@ class TournamentAnnouncementsView(ListView):
     model = TournamentAnnouncement
     template_name = 'main_app/tournament_announcements.html'
     context_object_name = 'tournament_announcements'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -232,7 +232,7 @@ class TournamentAnnouncementCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class TournamentAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
+class TournamentAnnouncementDeleteView(AuthorRequiredMixin, DeleteView):
     model = TournamentAnnouncement
     template_name = 'main_app/tournament_announcement_delete.html'
     success_url = reverse_lazy('main:tournament_anns')
@@ -242,7 +242,7 @@ class SaleAnnouncementsView(ListView):
     model = SaleAnnouncement
     template_name = 'main_app/sale_announcements.html'
     context_object_name = 'sale_announcements'
-    paginate_by = 2
+    paginate_by = 5
 
     def get_queryset(self):
         queryset = SaleAnnouncement.objects.select_related('boardgame', 'created_by').all()
@@ -270,7 +270,7 @@ class SaleAnnouncementCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-class SaleAnnouncementDeleteView(LoginRequiredMixin, DeleteView):
+class SaleAnnouncementDeleteView(AuthorRequiredMixin, DeleteView):
     model = SaleAnnouncement
     template_name = 'main_app/sale_announcement_delete.html'
     success_url = reverse_lazy('main:sale_anns')
@@ -281,13 +281,22 @@ class PlaymatesListView(LoginRequiredMixin, ListView):
     template_name = 'main_app/playmates.html'
     context_object_name = 'playmates'
 
+
     def get_queryset(self):
         queryset = User.objects.filter(Q(sent_messages__to_user=self.request.user)
                                        | Q(received_messages__from_user=self.request.user)).distinct()
         return queryset
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        user = self.request.user
+        is_unread = Message.objects.filter(to_user=user, read=False)
+        if is_unread:
+            context['unread'] = True
+        return context
 
-class MessageCreateView(CreateView):
+
+class MessageCreateView(LoginRequiredMixin, CreateView):
     model = Message
     fields = ['text']
     template_name = 'main_app/messages.html'
