@@ -49,8 +49,9 @@ class BoardGameView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         game = BoardGame.objects.get(pk=self.object.pk)
+        current_user = self.request.user
         context['game'] = game
-        context['players'] = game.players.all()
+        context['players'] = game.players.exclude(pk=current_user.pk)
         return context
 
 
@@ -337,6 +338,13 @@ def add_liked_game(request, pk):
     user = request.user
     user.liked_games.add(pk)
     return render(request, 'main_app/liked_game_added.html')
+
+@login_required
+def remove_liked_game(request, pk):
+    user = request.user
+    game = get_object_or_404(BoardGame, pk=pk)
+    user.liked_games.remove(game)
+    return HttpResponseRedirect(reverse_lazy('accounts:profile'))
 
 @login_required
 def update_message_view(request, pk):

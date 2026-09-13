@@ -21,6 +21,12 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_object(self, queryset=None):
         return self.request.user
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        liked_games = self.request.user.liked_games.all()
+        context['games'] = liked_games
+        return context
+
 
 class ProfileUpdateView(LoginRequiredMixin, UpdateView):
     model = get_user_model()
