@@ -14,7 +14,6 @@ from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncement
                     SaleAnnouncementForm)
 from .mixins import AuthorRequiredMixin
 
-# Проверить все вьюхи и шаблоны на наличие запросов N+1 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 class PlayersView(ListView):
     model = User
