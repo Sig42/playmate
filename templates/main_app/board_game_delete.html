@@ -11,14 +11,12 @@
 <div class="container-sm mt-5">
         <div class="row justify-content-center">
             <div class="col col-lg-10">
-                <h2> Вы уверены, что хотите удалить игру? </h2>
+                <h2> Вы уверены, что хотите удалить игру {{ game.title }}? </h2>
                 <form method="post" class="form">
                     {% csrf_token %}
-                    {% bootstrap_form form %}
                     {% bootstrap_button button_type='submit' content='OK' %}
                 </form>
             </div>
         </div>
     </div>
-
 {% endblock %}

@@ -32,7 +32,7 @@
             {% for game in board_games %}
                 <div class="card mt-2">
                     <div class="card-body">
-                        <h5 class="card-title">{{ game.title|capfirst }}</h5>
+                        <h5 class="card-title">{{ game.title }}</h5>
                         <div class="card-text">
                             {% if game.url_tesera %}
                             <p><a class="link-primary"

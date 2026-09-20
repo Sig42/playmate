@@ -1,5 +1,5 @@
 from django import forms
-from .models import BoardGame, GameAnnouncement, TournamentAnnouncement, SaleAnnouncement
+from .models import BoardGame, TournamentAnnouncement, SaleAnnouncement
 
 
 class BoardGameForm(forms.ModelForm):
@@ -8,12 +8,6 @@ class BoardGameForm(forms.ModelForm):
         fields = ['title',
                   'url_tesera',
                   'url_bgg']
-
-    def clean_title(self):
-        title = self.cleaned_data.get('title')
-        if title:
-            return title.lower()
-        return title
 
     def clean_url_tesera(self):
         data = self.cleaned_data['url_tesera']
@@ -52,23 +46,6 @@ class GameAnnouncementsFilterForm(forms.Form):
                                    required=False)
 
 
-#       --> WITHOUT USING <--
-class GameAnnouncementForm(forms.ModelForm):
-    class Meta:
-        model = GameAnnouncement
-        fields = ['boardgame',
-                  'city',
-                  'address',
-                  'place',
-                  'date',
-                  'is_online',
-                  'contact',
-                  'conditions']
-        widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'})
-        }
-
-
 class TestAnnouncementsFilterForm(forms.Form):
     title = forms.CharField(label='Название игры',
                             help_text='Можно ввести только часть названия игры',
@@ -101,12 +78,6 @@ class TournamentAnnouncementForm(forms.ModelForm):
                   'conditions',
                   'contact']
 
-    def clean_city(self):
-        city = self.cleaned_data.get('city')
-        if city:
-            return city.lower()
-        return city
-
 
 class TournamentAnnouncementFilterForm(forms.Form):
     game = forms.CharField(label='Название игры',
@@ -136,12 +107,6 @@ class SaleAnnouncementForm(forms.ModelForm):
                  'city',
                  'contact']
 
-    def clean_city(self):
-        city = self.cleaned_data.get('city')
-        if city:
-            return city.lower()
-        return city
-
 
 class SaleAnnouncementFilterForm(forms.Form):
     game = forms.CharField(label='Название игры',
@@ -155,9 +120,3 @@ class SaleAnnouncementFilterForm(forms.Form):
                            max_length=100,
                            strip=True,
                            required=False)
-
-    def clean_game(self):
-        game = self.cleaned_data.get('game')
-        if game:
-            return game.lower()
-        return game

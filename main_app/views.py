@@ -36,7 +36,7 @@ class BoardGamesView(ListView):
         queryset = super().get_queryset()
         title = self.request.GET.get('title')
         if title:
-            title = title.strip().lower()
+            title = title.strip()
             queryset = queryset.filter(title__icontains=title)
         return queryset
 
@@ -66,6 +66,7 @@ class CreateGameView(LoginRequiredMixin, CreateView):
 class DeleteGameView(AuthorRequiredMixin, DeleteView):
     model = BoardGame
     template_name = 'main_app/board_game_delete.html'
+    context_object_name = 'game'
     success_url = reverse_lazy('main:games')
 
 
