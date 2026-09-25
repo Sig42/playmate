@@ -19,7 +19,7 @@
                         <p>Хочет сыграть в:</p>
                         {% for game in games %}
                             <p><a class="link-primary"
-                                  href="{% url 'main:game' game.pk %}">{{ game.title|capfirst }}</a></p>
+                                  href="{% url 'main:game' game.pk %}">{{ game.title }}</a></p>
                         {% empty %}
                             У игрока пока нет пожеланий.
                         {% endfor %}

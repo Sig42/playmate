@@ -15,17 +15,6 @@ from .forms import (BoardGameForm, GameAnnouncementsFilterForm, TestAnnouncement
 from .mixins import AuthorRequiredMixin
 
 
-class PlayersView(ListView):
-    model = User
-    template_name = 'main_app/players.html'
-    context_object_name = 'players'
-    paginate_by = 5
-
-    def get_queryset(self):
-        queryset = User.objects.prefetch_related('liked_games').all()
-        return queryset
-
-
 class BoardGamesView(ListView):
     model = BoardGame
     template_name = 'main_app/board_games.html'
@@ -44,12 +33,12 @@ class BoardGamesView(ListView):
 class BoardGameView(DetailView):
     model = BoardGame
     template_name = 'main_app/board_game.html'
+    context_object_name = 'game'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        game = BoardGame.objects.get(pk=self.object.pk)
+        game = self.object
         current_user = self.request.user
-        context['game'] = game
         context['players'] = game.players.exclude(pk=current_user.pk)
         return context
 
@@ -57,6 +46,7 @@ class BoardGameView(DetailView):
 class CreateGameView(LoginRequiredMixin, CreateView):
     form_class = BoardGameForm
     template_name = 'main_app/board_game_create.html'
+    success_url = reverse_lazy('main:games')
 
     def form_valid(self, form):
         form.instance.created_by = self.request.user

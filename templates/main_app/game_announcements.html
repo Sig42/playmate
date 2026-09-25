@@ -29,9 +29,9 @@
             {% for ann in game_announcements %}
                 <div class="card mt-2">
                     <div class="card-body">
-                        <h5 class="card-title">{{ ann.boardgame.title|capfirst }}</h5>
+                        <h5 class="card-title">{{ ann.boardgame.title }}</h5>
                         <div class="card-text">
-                            <p>Город: {{ ann.city|capfirst }}</p>
+                            <p>Город: {{ ann.city }}</p>
                             <p>Адрес: {{ ann.address }}</p>
                             <p>Место: {{ ann.place }}</p>
                             <p>Дата, время проведения: {{ ann.date }}</p>

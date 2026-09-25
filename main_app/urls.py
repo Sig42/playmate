@@ -59,9 +59,6 @@ urlpatterns = [
     path('sale_announcement/<int:pk>/delete/',
          views.SaleAnnouncementDeleteView.as_view(),
          name='delete_sale_anns'),
-    path('players/',    # --> this path is not used!! Delete!! <--
-         views.PlayersView.as_view(),
-         name='players'),
     path('player/<int:pk>/',
          views.PlayerView.as_view(),
          name='player'),
