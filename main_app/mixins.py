@@ -1,9 +1,5 @@
-from asyncio import set_event_loop
-
 from django.core.exceptions import PermissionDenied
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.urls import reverse
-
 from Playmate.settings import LOGIN_URL
 
 
@@ -124,11 +120,12 @@ class TestDetailViewMixin:
     # Variables must be defined:
     # 1. template
     # 2. context_object_name
-    # 3. url
-    # 4.wrong_url
-    def test_uses_correct_template(self):
+    # 3. right_url
+    # 4. wrong_url
+    def test_uses_correct_template_200(self):
         response = self.client.get(self.right_url)
         self.assertTemplateUsed(response, self.template)
+        self.assertEqual(response.status_code, 200)
 
     def test_context_contains_object(self):
         response = self.client.get(self.right_url)
@@ -139,80 +136,35 @@ class TestDetailViewMixin:
         self.assertEqual(response.status_code, 404)
 
 
+class TestListViewMixin:
+    # The variables must be defined
+    # 1. right_url
+    # 2. wrong_url
+    # 3. template
+    # 4. objects_context_name
+    # 5. objects_number
+    # 6. first_page_number
+    # 7. second_page_number
+    # 8. per_page
 
-# class CommonTestsMixin(TestCase):
-# # Variables must be defined in setUp:
-#     # right_url
-#     # wrong_url
-#     # template
-#     # user
-#     # object
-#     # object_model -> model of object to filter and prove exists or not
-#     # author
-#     # non_author
-#
-#
-#     def test_get_correct_template_200_without_authentication(self):
-#         response = self.client.get(self.right_url)
-#         self.assertEqual(response.status_code, 200)
-#         self.assertTemplateUsed(response, self.template)
-#
-#     def test_get_correct_template_200_with_authentication(self):
-#         self.client.login(username=self.user.username,
-#                           password=self.user.password)
-#         response = self.client.get(self.right_url)
-#         self.assertEqual(response.status_code, 200)
-#         self.assertTemplateUsed(response, self.template)
-#
-#     def test_context_contains_object(self):
-#         response = self.client.get(self.right_url)
-#         self.assertEqual(response.context[self.context_object_name], self.object)
-#
-#     def test_get_wrong_pk_404_without_authentication(self):
-#         response = self.client.get(self.wrong_url)
-#         self.assertEqual(response.status_code, 404)
-#
-#     def test_get_wrong_pk_404_with_authentication(self):
-#         self.client.login(username=self.user.username,
-#                           password=self.user.password)
-#         response = self.client.get(wrong_url)
-#         self.assertEqual(response.status_code, 404)
-#
-#     def test_get_anonymous_302(self):
-#         response = self.client.get(self.right_url)
-#         self.assertEqual(response.status_code, 302)
-#         self.assertIn(LOGIN_URL, response.url)
-#
-#     def test_post_anonymous_302(self):
-#         response = self.client.post(self.right_url)
-#         self.assertEqual(response.status_code, 302)
-#         self.assertIn(LOGIN_URL, response.url)
-#
-#     def test_anonymous_cannot_delete_object(self):
-#         self.client.post(self.right_url)
-#         self.assertTrue(self.object_model.objects.filter(pk=self.object.pk).exists())
-#
-#     def test_get_non_author_403(self):
-#         self.client.login(username=self.non_author.username,
-#                           password=self.non_author.password)
-#         response = self.client.get(self.right_url)
-#         self.assertEqual(response.status_code, 403)
-#
-#     def test_post_non_author_403(self):
-#         self.client.login(username=self.non_author.username,
-#                           password=self.non_author.password)
-#         response = self.client.post(self.right_url)
-#         self.assertEqual(response.status_code, 403)
-#
-#     def test_non_author_cannot_delete_object(self):
-#         self.client.login(username=self.non_author.username,
-#                           password=self.non_author.password)
-#         self.client.post(self.right_url)
-#         self.assertTrue(self.object_model.objects.filter(pk=self.object.pk).exists())
-#
-#     def test_get_author_200(self):
-#         self.client.login(username=self.author.username,
-#                           password=self.author.password)
-#         response = self.client.get(self.right_url)
-#         self.assertEqual(response.status_code, 200)
-#
+    def test_view_uses_correct_template_context_name_status(self):
+        response = self.client.get(self.right_url)
+        self.assertTemplateUsed(response, self.template)
+        self.assertIn(self.objects_context_name, response.context)
+        self.assertEqual(response.status_code, 200)
+
+    def test_pagination_first_page_has_five_items(self):
+        response = self.client.get(self.right_url)
+        self.assertEqual(len(response.context[self.objects_context_name]), self.first_page_number)
+
+    def test_pagination_second_page_has_remaining_items(self):
+        response = self.client.get(self.right_url, {'page': 2})
+        self.assertEqual(len(response.context[self.objects_context_name]), self.second_page_number)
+
+    def test_pagination_invalid_page_returns_404(self):
+        response = self.client.get(self.wrong_url)
+        self.assertEqual(response.status_code, 404)
+
+    def test_paginate_by_proper_number(self):
+        response = self.client.get(self.right_url)
+        self.assertEqual(response.context['paginator'].per_page, self.first_page_number)

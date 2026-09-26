@@ -76,7 +76,7 @@ class GameAnnouncement(Announcement):
     boardgame = models.ForeignKey(BoardGame,
                                   verbose_name='Настолка',
                                   help_text='Если в выборе нет нужной игры - создайте ее, пожалуйста ("Игры" в '
-                                            'главном меню). Эту Вселенную делаете Вы ))',
+                                            'главном меню). Эту Вселенную делаете Вы )).',
                                   on_delete=models.CASCADE,
                                   blank=False,
                                   null=False)

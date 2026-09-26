@@ -1,11 +1,12 @@
 from django.test import TestCase
 from django.urls import reverse
 from django.contrib.auth import get_user_model
+from django.utils import timezone
+from datetime import timedelta
 
-from Playmate.settings import LOGIN_URL
-from .models import BoardGame
-from .mixins import TestCreateViewMixin, TestDeleteViewMixin, TestDetailViewMixin
-from .forms import BoardGameForm
+from .models import BoardGame, GameAnnouncement
+from .mixins import TestCreateViewMixin, TestDeleteViewMixin, TestDetailViewMixin, TestListViewMixin
+from .forms import BoardGameForm, GameAnnouncementsFilterForm
 
 User = get_user_model()
 
@@ -34,7 +35,7 @@ class BoardGamesViewTests(TestCase):
 
     def test_queryset_returns_all_games(self):
         response = self.client.get(self.url)
-        self.assertEqual(len(response.context['board_games']), 5)  # первая страница
+        self.assertEqual(len(response.context['board_games']), 5)
 
     # --- Пагинация ---
 
@@ -58,7 +59,7 @@ class BoardGamesViewTests(TestCase):
 
     def test_filter_by_title_case_insensitive(self):
         response = self.client.get(self.url, {'title': 'игра 1'})
-        self.assertEqual(len(response.context['board_games']), 1)
+        self.assertEqual(response.context['paginator'].count, 1)
         self.assertEqual(response.context['board_games'][0].title, 'Игра 1')
 
     def test_filter_by_title_partial_match(self):
@@ -67,11 +68,11 @@ class BoardGamesViewTests(TestCase):
 
     def test_filter_by_title_no_match(self):
         response = self.client.get(self.url, {'title': 'Несуществующая'})
-        self.assertEqual(len(response.context['board_games']), 0)
+        self.assertEqual(response.context['paginator'].count, 0)
 
     def test_filter_strips_whitespace(self):
         response = self.client.get(self.url, {'title': '  Игра 1  '})
-        self.assertEqual(len(response.context['board_games']), 1)
+        self.assertEqual(response.context['paginator'].count, 1)
 
     def test_filter_empty_string_returns_all(self):
         response = self.client.get(self.url, {'title': ''})
@@ -108,19 +109,6 @@ class BoardGameViewTests(TestDetailViewMixin, TestCase):
             'main:game', kwargs={'pk': cls.object.pk}
         )
         cls.wrong_url = reverse('main:game', kwargs={'pk': '5555555'})
-
-    # def test_uses_correct_template(self):
-    #     response = self.client.get(self.url)
-    #     self.assertTemplateUsed(response, self.template)
-    #
-    # def test_context_contains_game_object(self):
-    #     response = self.client.get(self.url)
-    #     self.assertEqual(response.context[self.object_context_name], self.game)
-    #
-    # def test_wrong_pk_gives_404(self):
-    #     url = reverse('main:game', kwargs={'pk': 777777})
-    #     response = self.client.get(url)
-    #     self.assertEqual(response.status_code, 404)
 
     def test_owner_excluded(self):
         self.client.login(username='author',
@@ -201,7 +189,7 @@ class DeleteGameViewTest(TestDeleteViewMixin, TestCase):
         self.assertTrue(BoardGame.objects.filter(pk=self.object.pk).exists())
 
 
-class PlayerViewTest(TestCase):
+class PlayerViewTest(TestDetailViewMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
         cls.object = User.objects.create_user(username='player',
@@ -209,6 +197,153 @@ class PlayerViewTest(TestCase):
         cls.right_url = reverse('main:player', kwargs={'pk': cls.object.pk})
         cls.wrong_url = reverse('main:player', kwargs={'pk': '9999999'})
         cls.template = 'main_app/player.html'
-        cls.context_object_name = 'player'
+        cls.object_context_name = 'player'
+        cls.game_1 = BoardGame.objects.create(title='game_1')
+        cls.game_2 = BoardGame.objects.create(title='game_2')
+        cls.object.liked_games.add(cls.game_1, cls.game_2)
+
+    def test_context_contains_right_info(self):
+        response = self.client.get(self.right_url)
+        self.assertEqual(response.context['pk'], self.object.pk)
+        self.assertEqual(list(response.context['games']), list(self.object.liked_games.all()))
 
 
+    # def setUpTestData(cls):
+    #     game = BoardGame.objects.create(title='game')
+    #     cls.right_url = reverse('main:game_ans')
+    #     cls.wrong_url = reverse('main:game_ans') + '?page=777'
+    #     cls.template = 'main_app/game_announcements.html'
+    #     cls.objects_context_name = 'game_announcements'
+    #     cls.objects_number = 7
+    #     cls.first_page_number = 5
+    #     cls.second_page_number = 2
+    #     cls.anns = [
+    #         GameAnnouncement.objects.create(
+    #             boardgame=game,
+    #             city=f'город {i}',
+    #             place=f'{i}',
+    #             date=,
+    #             is_online=False
+    #         ) for i in range(1, 8)
+    #     ]
+
+class GameAnnouncementsViewTest(TestListViewMixin, TestCase):
+    @classmethod
+    def setUpTestData(cls):
+        cls.right_url = reverse('main:game_anns')
+        cls.wrong_url = reverse('main:game_anns') + '?page=777'
+        cls.template = 'main_app/game_announcements.html'
+        cls.objects_context_name = 'game_announcements'
+        cls.objects_number = 7
+        cls.first_page_number = 5
+        cls.second_page_number = 2
+        cls.user = User.objects.create_user(
+            username='user',
+            password='1234'
+        )
+        cls.boardgame1 = BoardGame.objects.create(title='Манчкин')
+        cls.boardgame2 = BoardGame.objects.create(title='Каркассон')
+        cls.announcements = []
+        for i in range(7):
+            announcement = GameAnnouncement.objects.create(
+                boardgame=cls.boardgame1 if i % 2 == 0 else cls.boardgame2,
+                created_by=cls.user,
+                city='Москва' if i < 4 else 'Санкт-Петербург',
+                place=f'Место {i}',
+                date=timezone.now() + timedelta(days=i),
+                is_online=(i % 2 == 0),
+            )
+            cls.announcements.append(announcement)
+
+    def test_filter_form_in_context(self):
+        response = self.client.get(self.right_url)
+        self.assertIn('form', response.context)
+        self.assertIsInstance(response.context['form'], GameAnnouncementsFilterForm)
+
+    def test_pagination_first_page(self):
+        response = self.client.get(self.right_url)
+        self.assertTrue(response.context['is_paginated'])
+        self.assertEqual(len(response.context['game_announcements']), self.first_page_number)
+
+    def test_pagination_second_page(self):
+        response = self.client.get(self.right_url, {'page': 2})
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.context['game_announcements']), self.second_page_number)
+
+    def test_filter_by_game(self):
+        response = self.client.get(self.right_url, {'game': 'Манчкин'})
+        announcements = response.context['game_announcements']
+        self.assertTrue(len(announcements) == 4)
+        for a in announcements:
+            self.assertIn('манчкин', a.boardgame.title.lower())
+
+    def test_filter_by_game_partial_match(self):
+        response = self.client.get(self.right_url, {'game': 'каркас'})
+        announcements = response.context['game_announcements']
+        self.assertTrue(len(announcements) == 3)
+        for a in announcements:
+            self.assertIn('каркас', a.boardgame.title.lower())
+
+    def test_filter_by_city(self):
+        response = self.client.get(self.right_url, {'city': 'Москва'})
+        announcements = response.context['game_announcements']
+        self.assertTrue(len(announcements) == 4)
+        for a in announcements:
+            self.assertIn('москва', a.city.lower())
+
+    def test_filter_by_place(self):
+        response = self.client.get(self.right_url, {'place': 'Место 1'})
+        announcements = response.context['game_announcements']
+        self.assertEqual(len(announcements), 1)
+        self.assertIn('место 1', announcements[0].place.lower())
+
+    def test_filter_by_date(self):
+        target = self.announcements[2]
+        target_date = target.date.date()
+
+        response = self.client.get(self.right_url, {'date': target_date})
+        announcements = response.context['game_announcements']
+
+        self.assertEqual(len(announcements), 1)
+        self.assertEqual(announcements[0].pk, target.pk)
+
+    # def test_filter_by_date(self):
+    #     target_date = (date.today() + timedelta(days=2)).isoformat()
+    #     response = self.client.get(self.right_url, {'date': target_date})
+    #     announcements = response.context['game_announcements']
+    #     self.assertEqual(len(announcements), 1)
+    #     self.assertEqual(announcements[0].date.date().isoformat(), target_date)
+
+    def test_filter_by_is_online(self):
+        response = self.client.get(self.right_url, {'is_online': 'true'})
+        announcements = response.context['game_announcements']
+        self.assertTrue(len(announcements) == 4)
+        for a in announcements:
+            self.assertTrue(a.is_online)
+
+    def test_combined_filters(self):
+        response = self.client.get(self.right_url, {
+            'city': 'Москва',
+            'is_online': 'true',
+        })
+        announcements = response.context['game_announcements']
+        self.assertTrue(len(announcements) == 2)
+        for a in announcements:
+            self.assertIn('москва', a.city.lower())
+            self.assertTrue(a.is_online)
+
+    def test_empty_filters_returns_all(self):
+        response = self.client.get(self.right_url)
+        total = GameAnnouncement.objects.count()
+        self.assertEqual(response.context['paginator'].count, total)
+
+    def test_filter_with_no_results(self):
+        response = self.client.get(self.right_url, {'game': 'НесуществующаяИгра123'})
+        self.assertEqual(len(response.context['game_announcements']), 0)
+
+    def test_select_related_used(self):
+        with self.assertNumQueries(2):
+            # 1 - count для пагинации
+            # 1 - выборка объявлений
+            # 1 - выборка связанных объектов через select_related
+            self.client.get(self.right_url)
