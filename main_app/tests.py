@@ -208,25 +208,6 @@ class PlayerViewTest(TestDetailViewMixin, TestCase):
         self.assertEqual(list(response.context['games']), list(self.object.liked_games.all()))
 
 
-    # def setUpTestData(cls):
-    #     game = BoardGame.objects.create(title='game')
-    #     cls.right_url = reverse('main:game_ans')
-    #     cls.wrong_url = reverse('main:game_ans') + '?page=777'
-    #     cls.template = 'main_app/game_announcements.html'
-    #     cls.objects_context_name = 'game_announcements'
-    #     cls.objects_number = 7
-    #     cls.first_page_number = 5
-    #     cls.second_page_number = 2
-    #     cls.anns = [
-    #         GameAnnouncement.objects.create(
-    #             boardgame=game,
-    #             city=f'город {i}',
-    #             place=f'{i}',
-    #             date=,
-    #             is_online=False
-    #         ) for i in range(1, 8)
-    #     ]
-
 class GameAnnouncementsViewTest(TestListViewMixin, TestCase):
     @classmethod
     def setUpTestData(cls):
@@ -300,19 +281,10 @@ class GameAnnouncementsViewTest(TestListViewMixin, TestCase):
     def test_filter_by_date(self):
         target = self.announcements[2]
         target_date = target.date.date()
-
         response = self.client.get(self.right_url, {'date': target_date})
         announcements = response.context['game_announcements']
-
         self.assertEqual(len(announcements), 1)
         self.assertEqual(announcements[0].pk, target.pk)
-
-    # def test_filter_by_date(self):
-    #     target_date = (date.today() + timedelta(days=2)).isoformat()
-    #     response = self.client.get(self.right_url, {'date': target_date})
-    #     announcements = response.context['game_announcements']
-    #     self.assertEqual(len(announcements), 1)
-    #     self.assertEqual(announcements[0].date.date().isoformat(), target_date)
 
     def test_filter_by_is_online(self):
         response = self.client.get(self.right_url, {'is_online': 'true'})
@@ -343,7 +315,4 @@ class GameAnnouncementsViewTest(TestListViewMixin, TestCase):
 
     def test_select_related_used(self):
         with self.assertNumQueries(2):
-            # 1 - count для пагинации
-            # 1 - выборка объявлений
-            # 1 - выборка связанных объектов через select_related
             self.client.get(self.right_url)

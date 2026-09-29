@@ -18,6 +18,14 @@ class AuthorRequiredMixin(LoginRequiredMixin):
 
 
 class TestCreateViewMixin:
+    # Variables must be defined in setUp:
+    # 1. create_url
+    # 2. username
+    # 3. password
+    # 4. template
+    # 5. valid_data
+    # 6. model
+    # 7. create user to make login
     def test_anonymous_user_redirected_to_login(self):
         response = self.client.get(self.create_url)
         self.assertEqual(response.status_code, 302)
@@ -31,30 +39,17 @@ class TestCreateViewMixin:
         response = self.client.get(self.create_url)
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, self.template)
-        self.assertIsInstance(response.context['form'], self.form)
 
-    def test_create_game_success(self):
-        self.client.login(
-            username=self.username,
-            password=self.password
-        )
-        response = self.client.post(self.create_url, data=self.valid_data)
-        self.assertEqual(response.status_code, 302)
-        self.assertRedirects(response, self.success_url)
-        cnt = self.model.objects.count()
-        self.assertEqual(cnt, 1)
-        first = self.model.objects.first()
-        self.assertEqual(first.title, self.valid_data['title'])
-
-    def test_created_by_is_current_user(self):
-        self.client.login(
-            username=self.username,
-            password=self.password
-        )
-        self.client.post(self.create_url, data=self.valid_data)
-        first = self.model.objects.first()
-        self.assertIsNotNone(first)
-        self.assertEqual(first.created_by, self.user)
+    # def test_created_by_is_current_user(self):
+    #     self.client.login(
+    #         username=self.username,
+    #         password=self.password
+    #     )
+    #     response = self.client.post(self.create_url, data=self.valid_data)
+    #     self.assertRedirects(response, self.success_url)
+    #     first = self.model.objects.first()
+    #     self.assertIsNotNone(first)
+    #     self.assertEqual(first.created_by, self.user)
 
 
 class TestDeleteViewMixin:

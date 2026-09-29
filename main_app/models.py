@@ -44,7 +44,7 @@ class BoardGame(models.Model):
 
 class Announcement(models.Model):
     city = models.CharField(verbose_name='Город',
-                            help_text='Если игра будет онлайн укажите площадку, например: Tabletop',
+                            help_text='Если игра будет онлайн, укажите площадку, например: Tabletop',
                             max_length=100,
                             blank = True,
                             null = True,
