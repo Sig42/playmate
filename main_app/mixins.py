@@ -40,17 +40,6 @@ class TestCreateViewMixin:
         self.assertEqual(response.status_code, 200)
         self.assertTemplateUsed(response, self.template)
 
-    # def test_created_by_is_current_user(self):
-    #     self.client.login(
-    #         username=self.username,
-    #         password=self.password
-    #     )
-    #     response = self.client.post(self.create_url, data=self.valid_data)
-    #     self.assertRedirects(response, self.success_url)
-    #     first = self.model.objects.first()
-    #     self.assertIsNotNone(first)
-    #     self.assertEqual(first.created_by, self.user)
-
 
 class TestDeleteViewMixin:
     # Variables must be defined:
