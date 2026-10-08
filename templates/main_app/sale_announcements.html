@@ -11,7 +11,7 @@
 <div class="container-sm mt-5">
     <div class="row justify-content-center">
         <div class="col col-lg-10">
-            <h2 class="mb-4">Здесь Вы можете посмотреть/разместить объявления о продаже настолок.</h2>
+            <h4 class="mb-4">Здесь Вы можете посмотреть/разместить объявления о продаже настолок.</h4>
             <a href="{% url 'main:create_sale_anns'%}"
                class="btn btn-primary">Добавить объявление</a>
             <hr>
@@ -19,7 +19,7 @@
     </div>
     <div class="row justify-content-center">
         <div class="col-lg-3">
-            <h2 class="mb-4">Фильтровать объявления:</h2>
+            <h4 class="mb-4">Фильтровать объявления:</h4>
             <form method="get" class="form">
                 {% bootstrap_form form %}
                 {% bootstrap_button button_type='submit' content='OK' %}

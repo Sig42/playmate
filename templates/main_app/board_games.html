@@ -11,14 +11,14 @@
 <div class="container-sm mt-5">
     <div class="row pb-5 justify-content-center">
         <div class="col col-lg-10">
-            <h2> Если Вы не нашли нужную игру - добавьте ее в список. </h2>
+            <h4> Если Вы не нашли нужную игру - добавьте ее в список. </h4>
             <a href="{% url 'main:create_game' %}" class="btn btn-primary my-2">Добавить игру</a>
             <hr>
         </div>
     </div>
     <div class="row pb-5 justify-content-center">
         <div class="col col-lg-10">
-            <h2>Введите название (часть названия) настолки для поиска.</h2>
+            <h4>Введите название (часть названия) настолки для поиска.</h4>
             <form method="get" class="form">
                 <div class="my-3">
                     <input type="text" class="form-control" name="title">
@@ -43,10 +43,10 @@
                                   href="{{ game.url_bgg }}">Ссылка на игру на boardgamegeek.com</a></p>
                             {% endif %}
                         </div>
-                        <a href="{% url 'main:add_liked_game' game.pk %}" class="btn btn-primary">Хочу сыграть</a>
-                        <a href="{% url 'main:game' game.pk %}" class="btn btn-primary">Список игроков</a>
+                        <a href="{% url 'main:add_liked_game' game.pk %}" class="btn btn-primary mt-1">Хочу сыграть</a>
+                        <a href="{% url 'main:game' game.pk %}" class="btn btn-primary mt-1">Список игроков</a>
                         {% if user == game.created_by %}
-                            <a href="{% url 'main:delete_game' game.pk %}" class="btn btn-primary">Удалить игру</a>
+                            <a href="{% url 'main:delete_game' game.pk %}" class="btn btn-primary mt-1">Удалить игру</a>
                         {% endif %}
                     </div>
                 </div>

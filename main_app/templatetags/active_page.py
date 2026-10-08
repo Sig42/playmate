@@ -12,3 +12,4 @@ def active_url(request, path_name, *args, **kwargs):
     except NoReverseMatch:
         pass
     return ''
+

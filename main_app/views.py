@@ -203,11 +203,11 @@ class TournamentAnnouncementsView(ListView):
         is_online = self.request.GET.get('is_online')
 
         if game:
-            queryset = queryset.filter(boardgame__title__icontains=game.lower())
+            queryset = queryset.filter(boardgame__title__icontains=game)
         if city:
-            queryset = queryset.filter(city__icontains=city.lower())
+            queryset = queryset.filter(city__icontains=city)
         if date:
-            queryset = queryset.filter(date=date)
+            queryset = queryset.filter(date__date=date)
         if is_online:
             queryset = queryset.filter(is_online=True)
         return queryset

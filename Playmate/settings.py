@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'main_app.apps.MainAppConfig',
     'django_bootstrap5',
-    'accounts.apps.AccountsConfig'
+    'accounts.apps.AccountsConfig',
+    'model_populator',
 ]
 
 MIDDLEWARE = [
