@@ -13,4 +13,3 @@ staticfiles/
 *.env
 
 requirements.txt
-requirements_with_populator.txt
