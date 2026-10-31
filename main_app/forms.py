@@ -9,6 +9,13 @@ class BoardGameForm(forms.ModelForm):
                   'url_tesera',
                   'url_bgg']
 
+    url_tesera = forms.URLField(label='Ссылка на tesera.ru',
+                                help_text='Поле не является обязательным',
+                                required=False)
+    url_bgg = forms.URLField(label='Ссылка на boardgamegeek.com',
+                             help_text='Поле не является обязательным',
+                             required=False)
+
     def clean_url_tesera(self):
         data = self.cleaned_data['url_tesera']
         if data and not data.startswith('https://tesera.ru'):
@@ -18,7 +25,7 @@ class BoardGameForm(forms.ModelForm):
     def clean_url_bgg(self):
         data = self.cleaned_data['url_bgg']
         if data and not data.startswith('https://boardgamegeek.com/'):
-            raise forms.ValidationError('Ссылка на boardgamegeeks должна начинаться с "https://boardgamegeek.com/"')
+            raise forms.ValidationError('Ссылка на boardgamegeek должна начинаться с "https://boardgamegeek.com/"')
         return data
 
 

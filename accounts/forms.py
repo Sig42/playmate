@@ -5,7 +5,8 @@ from django.contrib.auth.forms import UserCreationForm
 
 class SignUpForm(UserCreationForm):
     first_name = forms.CharField(label='Контакты',
-                                 help_text='Укажите номер телефона или '
+                                 required=False,
+                                 help_text='Поле не является обязательным. Укажите номер телефона или '
                                      'имя в мессенджере (например telegram: @nick_name)',
                                  max_length=200)
     email = forms.EmailField(help_text='Почта потребуется, если Вы забудете пароль',
